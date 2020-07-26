@@ -7,11 +7,11 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
-var s *db.MongoDB
+var mongo *db.MongoDB
 
 // InitSchema - defines complete graphql schema
 func InitSchema(d *db.MongoDB) graphql.Schema {
-	s = d
+	mongo = d
 	graphqlSchema, err := graphql.NewSchema(graphql.SchemaConfig{
 		Query: graphql.NewObject(graphql.ObjectConfig{
 			Name: "Query",
@@ -38,11 +38,17 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 						"destination": &graphql.ArgumentConfig{
 							Type: graphql.String,
 						},
+						"locationLatitude": &graphql.ArgumentConfig{
+							Type: graphql.Int,
+						},
+						"locationLongitude": &graphql.ArgumentConfig{
+							Type: graphql.Int,
+						},
 						"datetime": &graphql.ArgumentConfig{
 							Type: graphql.String,
 						},
 						"hostedBy": &graphql.ArgumentConfig{
-							Type: graphql.String,
+							Type: graphql.NewNonNull(graphql.String),
 						},
 						"participants": &graphql.ArgumentConfig{
 							Type: graphql.NewList(graphql.String),

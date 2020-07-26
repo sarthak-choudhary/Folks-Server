@@ -14,7 +14,7 @@ func getAllEvents(_ graphql.ResolveParams) (interface{}, error) {
 	var err error
 	var result interface{}
 
-	result, err = query.GetAllEvents(s)
+	result, err = query.GetAllEvents(mongo)
 	if err != nil {
 		return nil, err
 	}
@@ -29,10 +29,14 @@ func addEvent(p graphql.ResolveParams) (interface{}, error) {
 	name := p.Args["name"].(string)
 	description := p.Args["description"].(string)
 	destination := p.Args["destination"].(string)
+	locationLatitude := p.Args["locationLatitude"].(float32)
+	locationLongitude := p.Args["locationLongitude"].(float32)
 	datetime := p.Args["datetime"].(time.Time)
 	hostedBy := p.Args["hostedBy"].(primitive.ObjectID)
+	participants := p.Args["participant"].([]primitive.ObjectID)
+	picturesUrls := p.Args["picturesUrls"].([]string)
 
-	result, err = query.AddEvent(name, description, destination, datetime, hostedBy, s)
+	result, err = query.AddEvent(name, description, destination, locationLatitude, locationLongitude, datetime, hostedBy, participants, picturesUrls, mongo)
 	if err != nil {
 		return nil, err
 	}

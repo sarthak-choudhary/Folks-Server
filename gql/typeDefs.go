@@ -9,8 +9,9 @@ import (
 	"github.com/graphql-go/graphql/language/kinds"
 )
 
+//ID validation
 func _validate(value string) error {
-	if len(value) < 3 {
+	if len(value) == 24 {
 		return errors.New("The minimum length required is 3")
 	}
 	return nil
@@ -64,6 +65,12 @@ var EventType = graphql.NewObject(graphql.ObjectConfig{
 		},
 		"destination": &graphql.Field{
 			Type: graphql.String,
+		},
+		"locationLatitude": &graphql.Field{
+			Type: graphql.Int,
+		},
+		"locationLongitude": &graphql.Field{
+			Type: graphql.Int,
 		},
 		"datetime": &graphql.Field{
 			Type: graphql.String,

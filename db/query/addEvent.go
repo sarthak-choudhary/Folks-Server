@@ -10,7 +10,7 @@ import (
 )
 
 //AddEvent - adds new event to db.
-func AddEvent(name string, description string, destination string, datetime time.Time, hostedBy primitive.ObjectID, d *db.MongoDB) (interface{}, error) {
+func AddEvent(name string, description string, destination string, locationLatitude float32, locationLongitude float32, datetime time.Time, hostedBy primitive.ObjectID, participants []primitive.ObjectID, picturesUrls []string, d *db.MongoDB) (interface{}, error) {
 	var err error
 	var event models.Event
 
@@ -18,9 +18,13 @@ func AddEvent(name string, description string, destination string, datetime time
 	event.Name = name
 	event.Description = description
 	event.Destination = destination
+	event.LocationLatitude = locationLatitude
+	event.LocationLongitude = locationLongitude
 	event.Datetime = datetime
 	event.CreatedOn = time.Now()
 	event.HostedBy = hostedBy
+	event.Participants = participants
+	event.PicturesUrls = picturesUrls
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
