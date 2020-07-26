@@ -11,8 +11,8 @@ import (
 
 // MongoDB holds session and database info.
 type MongoDB struct {
-	Session *mongo.Client
-	Events  *mongo.Collection
+	session *mongo.Client
+	events  *mongo.Collection
 }
 
 // ConnectDB connects to the database
@@ -29,14 +29,14 @@ func ConnectDB() MongoDB {
 	fmt.Println("Connected to MongoDB!")
 
 	return MongoDB{
-		Session: client,
-		Events:  client.Database("events_microservice").Collection("events"),
+		session: client,
+		events:  client.Database("events_microservice").Collection("events"),
 	}
 }
 
 // CloseDB closes connection to the database
 func (db MongoDB) CloseDB() {
-	err := db.Session.Disconnect(context.Background())
+	err := db.session.Disconnect(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}

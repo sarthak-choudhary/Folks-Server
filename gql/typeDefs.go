@@ -16,7 +16,6 @@ func _validate(value string) error {
 	return nil
 }
 
-//ID scalar added
 var ID = graphql.NewScalar(graphql.ScalarConfig{
 	Name:        "ID",
 	Description: "The `id` scalar type represents a ID Object.",
@@ -43,13 +42,12 @@ var ID = graphql.NewScalar(graphql.ScalarConfig{
 				log.Fatal(err)
 			}
 			return valueAst
+		} else {
+			log.Fatal("Must be of type string.")
 		}
-		log.Fatal("Must be of type string.")
-		return nil
 	},
 })
 
-//EventType scalar added
 var EventType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Event",
 	Fields: graphql.Fields{
@@ -66,9 +64,6 @@ var EventType = graphql.NewObject(graphql.ObjectConfig{
 			Type: graphql.String,
 		},
 		"datetime": &graphql.Field{
-			Type: graphql.String,
-		},
-		"createdOn": &graphql.Field{
 			Type: graphql.String,
 		},
 		"hostedBy": &graphql.Field{
