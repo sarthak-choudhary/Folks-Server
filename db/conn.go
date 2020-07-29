@@ -17,7 +17,9 @@ type MongoDB struct {
 
 // ConnectDB connects to the database
 func ConnectDB() MongoDB {
-	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://localhost:27017/events_microservice"))
+	// Change mongo ApplyURI -> "mongodb://db:27017/events_microservices" to run with docker
+	// Change mongo ApplyURI -> "mongodb://localhost:27017/events_microservices" to run locally
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://db:27017/events_microservice"))
 	if err != nil {
 		log.Fatal(err)
 	}
