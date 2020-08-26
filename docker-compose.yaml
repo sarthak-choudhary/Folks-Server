@@ -2,20 +2,20 @@ version: "3.7"
 
 services:
   server:
-    container_name: "events_microservice_server"
+    container_name: "folks_server"
     restart: unless-stopped
     build: .
     ports: 
-      - "8000:8000"
+      - "8080:8080"
     depends_on:
       - db
 
   db:
-    container_name: "events_microservice_db"
+    container_name: "folks_db"
     image: mongo
     restart: unless-stopped
     environment:
-      MONGO_INITDB_DATABASE: go_microservices
+      MONGO_INITDB_DATABASE: folks
     ports:
       - "27017:27017"
     volumes:

@@ -5,7 +5,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/anshalshukla/events_mongodb/db/query"
+	"github.com/anshalshukla/folks/db/query"
 	"github.com/graphql-go/graphql"
 )
 

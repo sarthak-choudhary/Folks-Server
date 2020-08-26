@@ -1,12 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/anshalshukla/events_mongodb/db"
-	"github.com/anshalshukla/events_mongodb/gql"
+	"github.com/anshalshukla/folks/api"
+	"github.com/anshalshukla/folks/db"
+	"github.com/anshalshukla/folks/gql"
+	"github.com/anshalshukla/folks/middleware"
 	"github.com/graphql-go/handler"
 )
 
@@ -23,11 +24,18 @@ func main() {
 		GraphiQL: true,
 	})
 
-	http.Handle("/graphql", h)
+	client := dbConnection.Session
 
-	fmt.Println("Server started on port 8000!")
-	err := http.ListenAndServe(":8000", nil)
+	http.Handle("/graphql", h)
+	http.Handle("/sign_up", middleware.LogReq(api.SignUp(client)))
+	http.Handle("/login", middleware.LogReq(api.Login(client)))
+	http.Handle("/google_login", middleware.LogReq(api.GoogleOauth(client)))
+	http.Handle("/my_profile", middleware.LogReq(middleware.Auth(client, api.Myprofile())))
+
+	log.Println("HTTP server started on :8080")
+	err := http.ListenAndServe(":8080", nil)
+
 	if err != nil {
-		log.Fatal("Listen And Serve:", err)
+		log.Fatal("Error starting server:", err)
 	}
 }

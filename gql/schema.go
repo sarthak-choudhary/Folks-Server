@@ -3,7 +3,7 @@ package gql
 import (
 	"log"
 
-	"github.com/anshalshukla/events_mongodb/db"
+	"github.com/anshalshukla/folks/db"
 	"github.com/graphql-go/graphql"
 )
 

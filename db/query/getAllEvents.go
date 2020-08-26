@@ -4,8 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/anshalshukla/events_mongodb/db"
-	"github.com/anshalshukla/events_mongodb/db/models"
+	"github.com/anshalshukla/folks/db"
+	"github.com/anshalshukla/folks/db/models"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
