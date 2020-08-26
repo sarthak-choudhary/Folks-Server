@@ -32,8 +32,8 @@ func main() {
 	http.Handle("/google_login", middleware.LogReq(api.GoogleOauth(client)))
 	http.Handle("/my_profile", middleware.LogReq(middleware.Auth(client, api.Myprofile())))
 
-	log.Println("HTTP server started on :3000")
-	err := http.ListenAndServe(":3000", nil)
+	log.Println("HTTP server started on :4000")
+	err := http.ListenAndServe(":4000", nil)
 
 	if err != nil {
 		log.Fatal("Error starting server:", err)
