@@ -8,6 +8,7 @@ import (
 	"github.com/anshalshukla/folks/db"
 	"github.com/anshalshukla/folks/gql"
 	"github.com/anshalshukla/folks/middleware"
+	"github.com/anshalshukla/folks/util"
 	"github.com/graphql-go/handler"
 )
 
@@ -31,6 +32,7 @@ func main() {
 	http.Handle("/login", middleware.LogReq(api.Login(client)))
 	http.Handle("/google_login", middleware.LogReq(api.GoogleOauth(client)))
 	http.Handle("/my_profile", middleware.LogReq(middleware.Auth(client, api.Myprofile())))
+	http.HandleFunc("/image_upload", util.Handler)
 
 	log.Println("HTTP server started on :4000")
 	err := http.ListenAndServe(":4000", nil)
