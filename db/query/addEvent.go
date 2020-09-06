@@ -23,7 +23,9 @@ func AddEvent(name string, description string, destination string, locationLatit
 	event.Datetime = datetime
 	event.CreatedOn = time.Now()
 	event.HostedBy = hostedBy
-	event.Participants = participants
+	for _, k := range participants {
+		event.Participants = append(event.Participants, k)
+	}
 	event.PicturesUrls = picturesUrls
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

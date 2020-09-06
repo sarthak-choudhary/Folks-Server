@@ -50,6 +50,43 @@ var ID = graphql.NewScalar(graphql.ScalarConfig{
 	},
 })
 
+//UserType scalar added
+var UserType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "User",
+	Fields: graphql.Fields{
+		"_id": &graphql.Field{
+			Type: ID,
+		},
+		"firstName": &graphql.Field{
+			Type: graphql.String,
+		},
+		"lastName": &graphql.Field{
+			Type: graphql.String,
+		},
+		"email": &graphql.Field{
+			Type: graphql.String,
+		},
+		"password": &graphql.Field{
+			Type: graphql.String,
+		},
+		"phoneNo": &graphql.Field{
+			Type: graphql.String,
+		},
+		"interests": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
+		"isComplete": &graphql.Field{
+			Type: graphql.Boolean,
+		},
+		"following": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
+		"events": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
+	},
+})
+
 //EventType scalar added
 var EventType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Event",

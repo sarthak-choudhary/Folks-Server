@@ -47,9 +47,6 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 						"datetime": &graphql.ArgumentConfig{
 							Type: graphql.String,
 						},
-						"hostedBy": &graphql.ArgumentConfig{
-							Type: graphql.NewNonNull(graphql.String),
-						},
 						"participants": &graphql.ArgumentConfig{
 							Type: graphql.NewList(graphql.String),
 						},
