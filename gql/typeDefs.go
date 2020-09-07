@@ -81,8 +81,14 @@ var UserType = graphql.NewObject(graphql.ObjectConfig{
 		"following": &graphql.Field{
 			Type: graphql.NewList(ID),
 		},
+		"followedByCount": &graphql.Field{
+			Type: graphql.Int,
+		},
 		"events": &graphql.Field{
 			Type: graphql.NewList(ID),
+		},
+		"picturesUrls": &graphql.Field{
+			Type: graphql.NewList(graphql.String),
 		},
 	},
 })
