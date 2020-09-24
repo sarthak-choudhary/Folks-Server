@@ -13,7 +13,7 @@ import (
 func GetUser(email string, client *mongo.Client) (*models.User, error) {
 	var result models.User
 	filter := bson.D{{"email", email}}
-	collection := client.Database("user_service").Collection("users")
+	collection := client.Database("folks").Collection("users")
 	err := collection.FindOne(context.TODO(), filter).Decode(&result)
 
 	if err != nil {
@@ -21,5 +21,4 @@ func GetUser(email string, client *mongo.Client) (*models.User, error) {
 	}
 
 	return &result, nil
-
 }

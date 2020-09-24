@@ -33,6 +33,7 @@ func main() {
 	})))
 
 	http.Handle("/graphql", middleware.LogReq(middleware.Auth(client, h)))
+	// http.Handle("/graphql", h)
 	http.Handle("/sign_up", middleware.LogReq(api.SignUp(client)))
 	http.Handle("/login", middleware.LogReq(api.Login(client)))
 	http.Handle("/google_login", middleware.LogReq(api.GoogleOauth(client)))

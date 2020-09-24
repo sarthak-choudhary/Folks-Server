@@ -19,7 +19,7 @@ type MongoDB struct {
 func ConnectDB() MongoDB {
 	// Change mongo ApplyURI -> "mongodb://db:27017/folks" to run with docker
 	// Change mongo ApplyURI -> "mongodb://localhost:27017/folks" to run locally
-	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://localhost:27017/folks"))
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://folks_db:27017/folks"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,7 +32,6 @@ func ConnectDB() MongoDB {
 
 	return MongoDB{
 		Session: client,
-		Events:  client.Database("events_microservice").Collection("events"),
 	}
 }
 

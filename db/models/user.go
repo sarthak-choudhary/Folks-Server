@@ -9,17 +9,22 @@ import (
 
 // User represents the User entity stored in the database
 type User struct {
-	ID         primitive.ObjectID   `json:"_id,omitempty" bson:"_id,omitempty"`
-	FirstName  string               `json:"firstName"`
-	LastName   string               `json:"lastName"`
-	Email      string               `json:"email"`
-	Password   string               `json:"password,omitempty"`
-	PhoneNo    string               `json:"phoneNo,omitempty"`
-	Interests  []string             `json:"interests,omitempty"`
-	IsComplete bool                 `json:"isComplete,omitempty"`
-	Following  []primitive.ObjectID `json:"following,omitempty"`
-	Events     []primitive.ObjectID `json:"events,omitempty"`
+	ID              primitive.ObjectID   `json:"_id,omitempty" bson:"_id,omitempty"`
+	FirstName       string               `json:"firstName"`
+	LastName        string               `json:"lastName"`
+	Email           string               `json:"email"`
+	Password        string               `json:"password,omitempty"`
+	PhoneNo         string               `json:"phoneNo,omitempty"`
+	Interests       []string             `json:"interests,omitempty"`
+	IsComplete      bool                 `json:"isComplete,omitempty"`
+	FollowedByCount int64                `json:"followedByCount,omitempty"`
+	Following       []primitive.ObjectID `json:"following,omitempty"`
+	Events          []primitive.ObjectID `json:"events,omitempty"`
+	PicturesUrls    []string             `bson:"picturesUrls,omitempty" json:"picturesUrls,omitempty"`
 }
+
+//Users - Slice of Users
+type Users []User
 
 //Claims used for jwt token
 type Claims struct {
