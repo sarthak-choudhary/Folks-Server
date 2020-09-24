@@ -21,6 +21,20 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					Args:    graphql.FieldConfigArgument{},
 					Resolve: getAllEvents,
 				},
+				"getAllUsers": &graphql.Field{
+					Type:    graphql.NewList(UserType),
+					Args:    graphql.FieldConfigArgument{},
+					Resolve: getAllUsers,
+				},
+				"getEventByID": &graphql.Field{
+					Type: graphql.NewList(EventType),
+					Args: graphql.FieldConfigArgument{
+						"_id": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: getEvent,
+				},
 			},
 		}),
 		Mutation: graphql.NewObject(graphql.ObjectConfig{
@@ -55,6 +69,36 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 						},
 					},
 					Resolve: addEvent,
+				},
+				"updateEvent": &graphql.Field{
+					Type: UserType,
+					Args: graphql.FieldConfigArgument{
+						"_id": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+						"description": &graphql.ArgumentConfig{
+							Type: graphql.String,
+						},
+						"destination": &graphql.ArgumentConfig{
+							Type: graphql.String,
+						},
+						"locationLatitude": &graphql.ArgumentConfig{
+							Type: graphql.Int,
+						},
+						"locationLongitude": &graphql.ArgumentConfig{
+							Type: graphql.Int,
+						},
+						"datetime": &graphql.ArgumentConfig{
+							Type: graphql.String,
+						},
+						"participants": &graphql.ArgumentConfig{
+							Type: graphql.NewList(graphql.String),
+						},
+						"picturesUrls": &graphql.ArgumentConfig{
+							Type: graphql.NewList(graphql.String),
+						},
+					},
+					Resolve: updateEvent,
 				},
 			},
 		}),

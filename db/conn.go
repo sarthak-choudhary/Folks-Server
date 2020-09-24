@@ -32,7 +32,6 @@ func ConnectDB() MongoDB {
 
 	return MongoDB{
 		Session: client,
-		Events:  client.Database("events_microservice").Collection("events"),
 	}
 }
 

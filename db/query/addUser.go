@@ -12,7 +12,7 @@ import (
 
 // AddUser adds a new user to the database
 func AddUser(user *models.User, client *mongo.Client) (string, error) {
-	collection := client.Database("user_service").Collection("users")
+	collection := client.Database("folks").Collection("users")
 	insertResult, err := collection.InsertOne(context.TODO(), user)
 
 	if err != nil {

@@ -23,6 +23,9 @@ type User struct {
 	PicturesUrls    []string             `bson:"picturesUrls,omitempty" json:"picturesUrls,omitempty"`
 }
 
+//Users - Slice of Users
+type Users []User
+
 //Claims used for jwt token
 type Claims struct {
 	Email string `json:"email"`
