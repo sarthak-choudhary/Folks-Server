@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -26,6 +27,10 @@ func main() {
 	})
 
 	client := dbConnection.Session
+	// Test case for gcp load balancer
+	http.Handle("/test", middleware.LogReq(http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(rw, "API Live")
+	})))
 
 	http.Handle("/graphql", middleware.LogReq(middleware.Auth(client, h)))
 	http.Handle("/sign_up", middleware.LogReq(api.SignUp(client)))
