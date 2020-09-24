@@ -12,7 +12,7 @@ import (
 )
 
 // UpdateEvent updates the event
-func UpdateEvent(_id string, firstname string, lastname string, phoneNo int64, interests []string, isComplete bool, followedByCount int64, following []primitive.ObjectID, events []primitive.ObjectID, picturesUrls []string, client *mongo.Client) (interface{}, error) {
+func UpdateUser(_id string, firstname string, lastname string, phoneNo string, interests []string, isComplete bool, followedByCount int64, following []primitive.ObjectID, events []primitive.ObjectID, picturesUrls []string, client *mongo.Client) (interface{}, error) {
 	var err error
 	var results models.User
 

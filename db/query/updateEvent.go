@@ -12,7 +12,7 @@ import (
 )
 
 // UpdateEvent updates the event
-func UpdateEvent(_id string, name string, description string, destination string, locationLatitude float32, locationLongitude float32, datetime time.Time, userID primitive.ObjectID, participants []primitive.ObjectID, picturesUrls []string, client *mongo.Client) (interface{}, error) {
+func UpdateEvent (_id string, name string, description string, destination string, locationLatitude float32, locationLongitude float32, datetime time.Time, userID primitive.ObjectID, participants []primitive.ObjectID, picturesUrls []string, client *mongo.Client) (interface{}, error) {
 	var err error
 	var results models.Event
 
