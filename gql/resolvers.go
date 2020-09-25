@@ -119,6 +119,40 @@ func addEvent(p graphql.ResolveParams) (interface{}, error) {
 	return result, nil
 }
 
+func addSquad(p graphql.ResolveParams) (interface{}, error) {
+	var err error
+	var result interface{}
+	var name, description string
+	var groupImages []string
+	var admins []primitive.ObjectID
+	var members []primitive.ObjectID
+	var invitesSent []primitive.ObjectID
+
+	user := p.Context.Value("user").(*models.User)
+
+	admins = append(admins, user.ID)
+
+	if p.Args["name"] != nil {
+		name = p.Args["name"].(string)
+	}
+
+	if p.Args["description"] != nil {
+		description = p.Args["description"].(string)
+	}
+
+	if p.Args["groupImages"] != nil {
+		groupImages = p.Args["groupImages"].([]string)
+	}
+
+	result, err = query.AddSquad(name, description, groupImages, admins, members, invitesSent, mongo.Session)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 func updateEvent(p graphql.ResolveParams) (interface{}, error) {
 	var err error
 	var result interface{}

@@ -14,3 +14,6 @@ type Squad struct {
 	Members     []primitive.ObjectID `bson:"members,omitempty" json:"members,omitempty"`
 	InvitesSent []primitive.ObjectID `bson:"invitesSent,omitempty" json:"invitesSent,omitempty"`
 }
+
+//Squads - Slice of squads
+type Squads []Squad

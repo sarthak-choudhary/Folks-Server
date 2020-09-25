@@ -79,6 +79,21 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					},
 					Resolve: addEvent,
 				},
+				"addSquad": &graphql.Field{
+					Type: SquadType,
+					Args: graphql.FieldConfigArgument{
+						"name": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+						"description": &graphql.ArgumentConfig{
+							Type: graphql.String,
+						},
+						"groupImages": &graphql.ArgumentConfig{
+							Type: graphql.NewList(graphql.String),
+						},
+					},
+					Resolve: addSquad,
+				},
 				"updateEvent": &graphql.Field{
 					Type: UserType,
 					Args: graphql.FieldConfigArgument{
