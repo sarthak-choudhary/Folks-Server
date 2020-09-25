@@ -132,3 +132,31 @@ var EventType = graphql.NewObject(graphql.ObjectConfig{
 		},
 	},
 })
+
+//SquadType scalar added
+var SquadType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "Squad",
+	Fields: graphql.Fields{
+		"_id": &graphql.Field{
+			Type: ID,
+		},
+		"name": &graphql.Field{
+			Type: graphql.String,
+		},
+		"description": &graphql.Field{
+			Type: graphql.String,
+		},
+		"groupImages": &graphql.Field{
+			Type: graphql.NewList(graphql.String),
+		},
+		"admins": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
+		"members": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
+		"invitesSent": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
+	},
+})
