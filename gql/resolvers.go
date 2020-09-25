@@ -50,6 +50,23 @@ func getEvent(p graphql.ResolveParams) (interface{}, error) {
 	return result, nil
 }
 
+func getUser(p graphql.ResolveParams) (interface{}, error) {
+	var err error
+	var result interface{}
+	var id string
+
+	if p.Args["_id"] != nil {
+		id = p.Args["_id"].(string)
+	}
+
+	result, err = query.GetUserByID(id, mongo.Session)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 //Mutation
 func addEvent(p graphql.ResolveParams) (interface{}, error) {
 	var err error

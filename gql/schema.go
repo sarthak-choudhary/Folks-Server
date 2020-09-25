@@ -35,6 +35,15 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					},
 					Resolve: getEvent,
 				},
+				"getUserByID": &graphql.Field{
+					Type: graphql.NewList(UserType),
+					Args: graphql.FieldConfigArgument{
+						"_id": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: getUser,
+				},
 			},
 		}),
 		Mutation: graphql.NewObject(graphql.ObjectConfig{
