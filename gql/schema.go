@@ -49,6 +49,15 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					},
 					Resolve: getUser,
 				},
+				"getSquadByID": &graphql.Field{
+					Type: graphql.NewList(UserType),
+					Args: graphql.FieldConfigArgument{
+						"_id": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: getSquad,
+				},
 			},
 		}),
 		Mutation: graphql.NewObject(graphql.ObjectConfig{
