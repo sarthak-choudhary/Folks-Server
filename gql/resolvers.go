@@ -34,6 +34,17 @@ func getAllUsers(_ graphql.ResolveParams) (interface{}, error) {
 	return result, nil
 }
 
+func getAllSquads(_ graphql.ResolveParams) (interface{}, error) {
+	var err error
+	var result interface{}
+
+	result, err = query.GetAllSquads(mongo.Session)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 func getEvent(p graphql.ResolveParams) (interface{}, error) {
 	var err error
 	var result interface{}

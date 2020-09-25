@@ -26,6 +26,11 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					Args:    graphql.FieldConfigArgument{},
 					Resolve: getAllUsers,
 				},
+				"getAllSquads": &graphql.Field{
+					Type:    graphql.NewList(SquadType),
+					Args:    graphql.FieldConfigArgument{},
+					Resolve: getAllSquads,
+				},
 				"getEventByID": &graphql.Field{
 					Type: graphql.NewList(EventType),
 					Args: graphql.FieldConfigArgument{
