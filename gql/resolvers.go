@@ -112,7 +112,7 @@ func updateEvent(p graphql.ResolveParams) (interface{}, error) {
 	var picturesUrls []string
 
 	user := p.Context.Value("user").(*models.User)
-	user_id := user.ID
+	userID := user.ID
 	id := p.Args["_id"].(string)
 
 	if p.Args["name"] != nil {
@@ -147,7 +147,7 @@ func updateEvent(p graphql.ResolveParams) (interface{}, error) {
 		picturesUrls = p.Args["picturesUrls"].([]string)
 	}
 
-	result, err = query.UpdateEvent(id, name, description, destination, locationLatitude, locationLongitude, datetime, user_id, participants, picturesUrls, mongo.Session)
+	result, err = query.UpdateEvent(id, name, description, destination, locationLatitude, locationLongitude, datetime, userID, participants, picturesUrls, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -159,13 +159,13 @@ func addFollower(p graphql.ResolveParams) (interface{}, error) {
 	var username string
 
 	user := p.Context.Value("user").(*models.User)
-	user_id := user.ID
+	userID := user.ID
 
 	if p.Args["username"] != nil {
 		username = p.Args["username"].(string)
 	}
 
-	result, err := query.FollowUser(user_id, username, mongo.Session)
+	result, err := query.FollowUser(userID, username, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
