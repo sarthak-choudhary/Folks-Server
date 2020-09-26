@@ -87,7 +87,7 @@ func getSquad(p graphql.ResolveParams) (interface{}, error) {
 		id = p.Args["_id"].(string)
 	}
 
-	result, err = query.GetSquadByID(id, mongo.Session)
+	result, err = query.GetSquad(id, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
