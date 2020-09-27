@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/anshalshukla/folks/api"
 	"github.com/anshalshukla/folks/db"
@@ -40,9 +41,11 @@ func main() {
 	http.Handle("/my_profile", middleware.LogReq(middleware.Auth(client, api.Myprofile())))
 	http.HandleFunc("/image_upload", util.Handler)
 
-	log.Println("HTTP server started on :4000")
-	err := http.ListenAndServe(":4000", nil)
 
+
+	log.Println("HTTP server started on :%d", os.Getenv("PORT_FOR_WEBAPP"))
+	addr := ":"+string(os.Getenv("PORT_FOR_WEBAPP"))
+	err := http.ListenAndServe(addr, nil)
 	if err != nil {
 		log.Fatal("Error starting server:", err)
 	}
