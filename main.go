@@ -34,17 +34,15 @@ func main() {
 	})))
 
 	http.Handle("/graphql", middleware.LogReq(middleware.Auth(client, h)))
-	// http.Handle("/graphql", h)
+	http.Handle("/graphql_test", h)
 	http.Handle("/sign_up", middleware.LogReq(api.SignUp(client)))
 	http.Handle("/login", middleware.LogReq(api.Login(client)))
 	http.Handle("/google_login", middleware.LogReq(api.GoogleOauth(client)))
 	http.Handle("/my_profile", middleware.LogReq(middleware.Auth(client, api.Myprofile())))
 	http.HandleFunc("/image_upload", util.Handler)
 
-
-
 	log.Println("HTTP server started on :%d", os.Getenv("PORT_FOR_WEBAPP"))
-	addr := ":"+string(os.Getenv("PORT_FOR_WEBAPP"))
+	addr := ":" + string(os.Getenv("PORT_FOR_WEBAPP"))
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
 		log.Fatal("Error starting server:", err)
