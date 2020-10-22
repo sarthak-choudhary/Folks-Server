@@ -19,7 +19,8 @@ type MongoDB struct {
 func ConnectDB() MongoDB {
 	// Change mongo ApplyURI -> "mongodb://db:27017/folks" to run with docker
 	// Change mongo ApplyURI -> "mongodb://localhost:27017/folks" to run locally
-	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://folks_db:27017/folks"))
+	// Change mongo ApplyURI -> "mongodb+srv://folks:folks@cluster0.9up09.mongodb.net/<dbname>?retryWrites=true&w=majority" to run on mongodb atlas
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb+srv://folks:folks@cluster0.9up09.mongodb.net/<dbname>?retryWrites=true&w=majority"))
 	if err != nil {
 		log.Fatal(err)
 	}
