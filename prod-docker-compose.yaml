@@ -8,21 +8,4 @@ services:
     environment:
       - VIRTUAL_HOST=api.digitaldrive.live
       - LETSENCRYPT_HOST=api.digitaldrive.live
-      - PORT_FOR_WEBAPP=80
-    depends_on:
-      - db
-  db:
-    container_name: "folks_db"
-    image: mongo
-    restart: unless-stopped
-    environment:
-      MONGO_INITDB_DATABASE: folks
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-      - mongo_config:/data/configdb
-
-volumes:
-  mongo_data:
-  mongo_config:
+      - PORT_FOR_WEBAPP=8

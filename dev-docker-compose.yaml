@@ -11,20 +11,6 @@ services:
       - "4000:4000"
     environment:
       - PORT_FOR_WEBAPP=4000
-    depends_on:
-      - db
-
-  db:
-    container_name: "folks_db"
-    image: mongo
-    restart: unless-stopped
-    environment:
-      MONGO_INITDB_DATABASE: folks
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-      - mongo_config:/data/configdb
 
   nginx:
     container_name: "nginx"
@@ -36,8 +22,3 @@ services:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - server
-
-
-volumes:
-  mongo_data:
-  mongo_config:
