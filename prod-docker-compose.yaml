@@ -8,4 +8,4 @@ services:
     environment:
       - VIRTUAL_HOST=api.digitaldrive.live
       - LETSENCRYPT_HOST=api.digitaldrive.live
-      - PORT_FOR_WEBAPP=8
+      - PORT_FOR_WEBAPP=80
