@@ -58,6 +58,11 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					},
 					Resolve: getSquad,
 				},
+				"myProfile": &graphql.Field{
+					Type:    graphql.NewList(UserType),
+					Args:    graphql.FieldConfigArgument{},
+					Resolve: myProfile,
+				},
 			},
 		}),
 		Mutation: graphql.NewObject(graphql.ObjectConfig{
