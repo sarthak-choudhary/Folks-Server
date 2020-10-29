@@ -63,6 +63,36 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					Args:    graphql.FieldConfigArgument{},
 					Resolve: myProfile,
 				},
+				"getNearByEvents": &graphql.Field{
+					Type: graphql.NewList(EventType),
+					Args: graphql.FieldConfigArgument{
+						"locationLatitude": &graphql.ArgumentConfig{
+							Type: graphql.Float,
+						},
+						"locationLongitude": &graphql.ArgumentConfig{
+							Type: graphql.Float,
+						},
+						"radius": &graphql.ArgumentConfig{
+							Type: graphql.Float,
+						},
+					},
+					Resolve: getNearByEvents,
+				},
+				"getNearByEventsWithImages": &graphql.Field{
+					Type: graphql.NewList(EventType),
+					Args: graphql.FieldConfigArgument{
+						"locationLatitude": &graphql.ArgumentConfig{
+							Type: graphql.Float,
+						},
+						"locationLongitude": &graphql.ArgumentConfig{
+							Type: graphql.Float,
+						},
+						"radius": &graphql.ArgumentConfig{
+							Type: graphql.Float,
+						},
+					},
+					Resolve: getNearByEventsWithImages,
+				},
 			},
 		}),
 		Mutation: graphql.NewObject(graphql.ObjectConfig{
