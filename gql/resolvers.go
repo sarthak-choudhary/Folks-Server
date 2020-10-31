@@ -253,7 +253,7 @@ func addFollower(p graphql.ResolveParams) (interface{}, error) {
 
 func myProfile(p graphql.ResolveParams) (interface{}, error) {
 
-	user := p.Context.Value("user").(*models.User)
+	user := p.Context.Value("user").(models.User)
 
 	return user, nil
 
