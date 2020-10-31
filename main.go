@@ -41,7 +41,7 @@ func main() {
 	http.Handle("/my_profile", middleware.LogReq(middleware.Auth(client, api.Myprofile())))
 	http.HandleFunc("/image_upload", util.Handler)
 
-	log.Println("HTTP server started on :%d", os.Getenv("PORT_FOR_WEBAPP"))
+	log.Printf("HTTP server started on :%s", os.Getenv("PORT_FOR_WEBAPP"))
 	addr := ":" + string(os.Getenv("PORT_FOR_WEBAPP"))
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {

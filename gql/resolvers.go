@@ -1,6 +1,7 @@
 package gql
 
 import (
+	"github.com/anshalshukla/folks/util"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -256,5 +257,36 @@ func myProfile(p graphql.ResolveParams) (interface{}, error) {
 	user := p.Context.Value("user").(models.User)
 
 	return user, nil
+}
 
+func getNearByEvents(rp graphql.ResolveParams)	(interface{}, error)	{
+	var longitude float32
+	var latitude float32
+	var radius float32
+	if rp.Args["locationLatitude"] != nil && rp.Args["locationLongitude"] != nil && rp.Args["radius"] != nil	{
+		longitude = rp.Args["locationLongitude"].(float32)
+		latitude = rp.Args["locationLatitude"].(float32)
+		radius = rp.Args["locationLatitude"].(float32)
+	}
+	result, err := util.NearbyEvents(mongo.Session, latitude, longitude, radius)
+	if err !=nil{
+		return nil, err
+	}
+	return result, nil
+}
+
+func getNearByEventsWithImages(rp graphql.ResolveParams)	(interface{}, error)	{
+	var longitude float32
+	var latitude float32
+	var radius float32
+	if rp.Args["locationLatitude"] != nil && rp.Args["locationLongitude"] != nil && rp.Args["radius"] != nil	{
+		longitude = rp.Args["locationLongitude"].(float32)
+		latitude = rp.Args["locationLatitude"].(float32)
+		radius = rp.Args["radius"].(float32)
+	}
+	result, err := util.NearbyEventsWithImages(mongo.Session, latitude, longitude, radius)
+	if err !=nil{
+		return nil, err
+	}
+	return result, nil
 }
