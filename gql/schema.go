@@ -59,7 +59,7 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					Resolve: getSquad,
 				},
 				"myProfile": &graphql.Field{
-					Type:    graphql.NewList(UserType),
+					Type:    UserType,
 					Args:    graphql.FieldConfigArgument{},
 					Resolve: myProfile,
 				},
