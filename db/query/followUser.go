@@ -48,7 +48,7 @@ func FollowUser(id primitive.ObjectID, user_id string, client *mongo.Client) (in
 	result := collection.FindOneAndUpdate(ctx, q, q2, &opt)
 
 	if result.Err() != nil {
-		return nil, err
+		return nil, result.Err()
 	}
 
 	err = result.Decode(&results)

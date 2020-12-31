@@ -152,6 +152,15 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					},
 					Resolve: followUser,
 				},
+				"acceptRequest": &graphql.Field{
+					Type: UserType,
+					Args: graphql.FieldConfigArgument{
+						"id": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: acceptRequest,
+				},
 				"updateEvent": &graphql.Field{
 					Type: EventType,
 					Args: graphql.FieldConfigArgument{
