@@ -161,6 +161,15 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					},
 					Resolve: acceptRequest,
 				},
+				"declineRequest": &graphql.Field{
+					Type: UserType,
+					Args: graphql.FieldConfigArgument{
+						"id": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: declineRequest,
+				},
 				"updateEvent": &graphql.Field{
 					Type: EventType,
 					Args: graphql.FieldConfigArgument{

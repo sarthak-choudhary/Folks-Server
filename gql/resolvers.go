@@ -313,6 +313,45 @@ func acceptRequest(p graphql.ResolveParams) (interface{}, error) {
 	return result, nil
 }
 
+func declineRequest(p graphql.ResolveParams) (interface{}, error) {
+	var err error
+	var user_id string
+
+	user := p.Context.Value("user").(*models.User)
+	id := user.ID
+	if p.Args["id"] != nil {
+		user_id = p.Args["id"].(string)
+	}
+
+	userID, err := primitive.ObjectIDFromHex(user_id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var requested bool
+	requested = false
+
+	for _, obj := range user.RequestsReceived {
+		if obj == userID {
+			requested = true
+			break
+		}
+	}
+
+	if requested != true {
+		err = errors.New("User doesn't has such follow request")
+		return nil, err
+	}
+
+	result, err := query.DeclineRequest(id, userID, mongo.Session)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 func myProfile(p graphql.ResolveParams) (interface{}, error) {
 
 	user := p.Context.Value("user").(*models.User)
