@@ -90,6 +90,18 @@ var UserType = graphql.NewObject(graphql.ObjectConfig{
 		"picturesUrls": &graphql.Field{
 			Type: graphql.NewList(graphql.String),
 		},
+		"requestsSent": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
+		"requestsReceived": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
+		"invitesSent": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
+		"invitesReceived": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
 	},
 })
 
@@ -102,6 +114,9 @@ var EventType = graphql.NewObject(graphql.ObjectConfig{
 		},
 		"name": &graphql.Field{
 			Type: graphql.String,
+		},
+		"category": &graphql.Field{
+			Type: graphql.Int,
 		},
 		"description": &graphql.Field{
 			Type: graphql.String,
@@ -129,6 +144,12 @@ var EventType = graphql.NewObject(graphql.ObjectConfig{
 		},
 		"picturesUrls": &graphql.Field{
 			Type: graphql.NewList(graphql.String),
+		},
+		"waitlist": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
+		"invitelist": &graphql.Field{
+			Type: graphql.NewList(ID),
 		},
 	},
 })

@@ -1,8 +1,9 @@
 package gql
 
 import (
-	"github.com/anshalshukla/folks/util"
 	"time"
+
+	"github.com/anshalshukla/folks/util"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
@@ -234,18 +235,18 @@ func updateEvent(p graphql.ResolveParams) (interface{}, error) {
 	return result, nil
 }
 
-func addFollower(p graphql.ResolveParams) (interface{}, error) {
+func followUser(p graphql.ResolveParams) (interface{}, error) {
 	var err error
-	var username string
+	var userID string
 
 	user := p.Context.Value("user").(*models.User)
-	userID := user.ID
+	id := user.ID
 
-	if p.Args["username"] != nil {
-		username = p.Args["username"].(string)
+	if p.Args["id"] != nil {
+		userID = p.Args["id"].(string)
 	}
 
-	result, err := query.FollowUser(userID, username, mongo.Session)
+	result, err := query.FollowUser(id, userID, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -258,33 +259,33 @@ func myProfile(p graphql.ResolveParams) (interface{}, error) {
 	return user, nil
 }
 
-func getNearByEvents(rp graphql.ResolveParams)	(interface{}, error)	{
+func getNearByEvents(rp graphql.ResolveParams) (interface{}, error) {
 	var longitude float32
 	var latitude float32
 	var radius float32
-	if rp.Args["locationLatitude"] != nil && rp.Args["locationLongitude"] != nil && rp.Args["radius"] != nil	{
+	if rp.Args["locationLatitude"] != nil && rp.Args["locationLongitude"] != nil && rp.Args["radius"] != nil {
 		longitude = rp.Args["locationLongitude"].(float32)
 		latitude = rp.Args["locationLatitude"].(float32)
 		radius = rp.Args["locationLatitude"].(float32)
 	}
 	result, err := util.NearbyEvents(mongo.Session, latitude, longitude, radius)
-	if err !=nil{
+	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func getNearByEventsWithImages(rp graphql.ResolveParams)	(interface{}, error)	{
+func getNearByEventsWithImages(rp graphql.ResolveParams) (interface{}, error) {
 	var longitude float32
 	var latitude float32
 	var radius float32
-	if rp.Args["locationLatitude"] != nil && rp.Args["locationLongitude"] != nil && rp.Args["radius"] != nil	{
+	if rp.Args["locationLatitude"] != nil && rp.Args["locationLongitude"] != nil && rp.Args["radius"] != nil {
 		longitude = rp.Args["locationLongitude"].(float32)
 		latitude = rp.Args["locationLatitude"].(float32)
 		radius = rp.Args["radius"].(float32)
 	}
 	result, err := util.NearbyEventsWithImages(mongo.Session, latitude, longitude, radius)
-	if err !=nil{
+	if err != nil {
 		return nil, err
 	}
 	return result, nil

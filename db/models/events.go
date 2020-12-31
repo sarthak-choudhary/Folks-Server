@@ -9,6 +9,7 @@ import (
 //Event model
 type Event struct {
 	ID                primitive.ObjectID   `bson:"_id" json:"_id" required:"true"`
+	Category          int64                `bson:"category" json:"category" required:"true"` // 0 - for open, 1 - for closed, 2 - for invite-only
 	Name              string               `bson:"name" json:"name" required:"true"`
 	Description       string               `bson:"description,omitempty" json:"description,omitempty"`
 	Destination       string               `bson:"destination,omitempty" json:"destination,omitempty"`
@@ -18,6 +19,8 @@ type Event struct {
 	CreatedOn         time.Time            `bson:"createdOn" json:"createdOn" required:"true"`
 	HostedBy          primitive.ObjectID   `bson:"hostedBy" json:"hostedBy" required:"true"`
 	Participants      []primitive.ObjectID `bson:"participants,omitempty" json:"participants,omitempty"`
+	Waitlist          []primitive.ObjectID `bson:"waitlist,omitempty" json:"waitlist,omitempty"`
+	InviteList        []primitive.ObjectID `bson:"invitelist,omitempty" json:"invitelist,omitempty"`
 	PicturesUrls      []string             `bson:"picturesUrls,omitempty" json:"picturesUrls,omitempty"`
 }
 

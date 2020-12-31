@@ -16,6 +16,7 @@ func AddUser(user *models.User, client *mongo.Client) (string, error) {
 	insertResult, err := collection.InsertOne(context.TODO(), user)
 
 	if err != nil {
+		fmt.Println("here")
 		log.Fatal(err)
 		return "", err
 	}

@@ -143,8 +143,17 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					},
 					Resolve: addSquad,
 				},
-				"updateEvent": &graphql.Field{
+				"followUser": &graphql.Field{
 					Type: UserType,
+					Args: graphql.FieldConfigArgument{
+						"id": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: followUser,
+				},
+				"updateEvent": &graphql.Field{
+					Type: EventType,
 					Args: graphql.FieldConfigArgument{
 						"_id": &graphql.ArgumentConfig{
 							Type: graphql.NewNonNull(graphql.String),
@@ -175,7 +184,7 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 				},
 			},
 		}),
-		Types: []graphql.Type{ID},
+		Types: []graphql.Type{ID, UserType, EventType, SquadType},
 	})
 	if err != nil {
 		log.Fatal(err)

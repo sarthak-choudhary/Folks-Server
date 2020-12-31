@@ -35,7 +35,7 @@ func UpdateUser(_id string, firstname string, lastname string, phoneNo string, i
 	}}
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	collection := client.Database("folks").Collection("events")
+	collection := client.Database("folks").Collection("users")
 	err = collection.FindOneAndUpdate(ctx, q, q2).Decode(&results)
 	if err != nil {
 		return nil, err
