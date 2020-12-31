@@ -238,13 +238,33 @@ func updateEvent(p graphql.ResolveParams) (interface{}, error) {
 
 func followUser(p graphql.ResolveParams) (interface{}, error) {
 	var err error
-	var userID string
+	var user_id string
 
 	user := p.Context.Value("user").(*models.User)
 	id := user.ID
 
 	if p.Args["id"] != nil {
-		userID = p.Args["id"].(string)
+		user_id = p.Args["id"].(string)
+	}
+
+	userID, err := primitive.ObjectIDFromHex(user_id)
+	if err != nil {
+		return nil, err
+	}
+
+	var following bool
+	following = false
+
+	for _, obj := range user.Following {
+		if obj == userID {
+			following = true
+			break
+		}
+	}
+
+	if following == true {
+		err = errors.New("User is already following this account")
+		return nil, err
 	}
 
 	result, err := query.FollowUser(id, userID, mongo.Session)

@@ -12,15 +12,9 @@ import (
 )
 
 //FollowUser - Logged in user follows the user with given username
-func FollowUser(id primitive.ObjectID, user_id string, client *mongo.Client) (interface{}, error) {
+func FollowUser(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.Client) (interface{}, error) {
 	var err error
 	var results models.User
-
-	userID, err := primitive.ObjectIDFromHex(user_id)
-
-	if err != nil {
-		return nil, err
-	}
 
 	q := bson.M{"_id": userID}
 	q2 := bson.M{"$addToSet": bson.M{"requestsReceived": id}}
