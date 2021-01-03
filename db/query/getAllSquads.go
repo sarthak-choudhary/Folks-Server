@@ -11,9 +11,10 @@ import (
 )
 
 //GetAllSquads - fetches all squads feom db.
-func GetAllSquads(client *mongo.Client) (interface{}, error) {
+func GetAllSquads(client *mongo.Client) (models.Squads, error) {
 	var result models.Squads
 	var err error
+	emptySquadsObject := models.Squads{}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -22,20 +23,24 @@ func GetAllSquads(client *mongo.Client) (interface{}, error) {
 	cur, err := collection.Find(ctx, bson.D{}, options.Find())
 
 	if err != nil {
-		return nil, err
+		return emptySquadsObject, err
 	}
 
 	for cur.Next(ctx) {
 		var squad models.Squad
 		err = cur.Decode(&squad)
+
 		if err != nil {
-			return nil, err
+			return emptySquadsObject, err
 		}
+
 		result = append(result, squad)
 	}
+
 	if err = cur.Err(); err != nil {
-		return nil, err
+		return emptySquadsObject, err
 	}
+
 	cur.Close(ctx)
 	return result, nil
 }

@@ -12,9 +12,10 @@ import (
 )
 
 //FollowUser - Logged in user follows the user with given username
-func FollowUser(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.Client) (interface{}, error) {
+func FollowUser(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.Client) (models.User, error) {
 	var err error
 	var results models.User
+	emptyUserObject := models.User{}
 
 	q := bson.M{"_id": userID}
 	q2 := bson.M{"$addToSet": bson.M{"requestsReceived": id}}
@@ -25,7 +26,7 @@ func FollowUser(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.
 	err = collection.FindOneAndUpdate(ctx, q, q2).Err()
 
 	if err != nil {
-		return nil, err
+		return emptyUserObject, err
 	}
 
 	q = bson.M{"_id": id}
@@ -42,13 +43,13 @@ func FollowUser(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.
 	result := collection.FindOneAndUpdate(ctx, q, q2, &opt)
 
 	if result.Err() != nil {
-		return nil, result.Err()
+		return emptyUserObject, result.Err()
 	}
 
 	err = result.Decode(&results)
 
 	if err != nil {
-		return nil, err
+		return emptyUserObject, err
 	}
 
 	return results, nil

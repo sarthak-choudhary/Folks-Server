@@ -11,17 +11,19 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// UpdateEvent updates the event
-func UpdateUser(_id string, firstname string, lastname string, phoneNo string, interests []string, isComplete bool, followedByCount int64, following []primitive.ObjectID, events []primitive.ObjectID, picturesUrls []string, client *mongo.Client) (interface{}, error) {
+// UpdateUser updates the user
+func UpdateUser(_id string, firstname string, lastname string, phoneNo string, interests []string, isComplete bool, followedByCount int64, following []primitive.ObjectID, events []primitive.ObjectID, picturesUrls []string, client *mongo.Client) (models.User, error) {
 	var err error
 	var results models.User
+	emptyUserObject := models.User{}
 
 	id, err := primitive.ObjectIDFromHex(_id)
-	if err != nil {
-		return nil, err
-	}
-	q := bson.M{"_id": id}
 
+	if err != nil {
+		return emptyUserObject, err
+	}
+
+	q := bson.M{"_id": id}
 	q2 := bson.M{"$set": bson.M{
 		"firstname":       firstname,
 		"lastname":        lastname,
@@ -37,11 +39,12 @@ func UpdateUser(_id string, firstname string, lastname string, phoneNo string, i
 	defer cancel()
 	collection := client.Database("folks").Collection("users")
 	err = collection.FindOneAndUpdate(ctx, q, q2).Decode(&results)
+
 	if err != nil {
-		return nil, err
+		return emptyUserObject, err
 	}
 
-	err = errors.New("User info can only be modified only by user himself.")
+	err = errors.New("User info can only be modified only by user himself")
 
 	results.FirstName = firstname
 	results.LastName = lastname
@@ -52,5 +55,6 @@ func UpdateUser(_id string, firstname string, lastname string, phoneNo string, i
 	results.Following = following
 	results.Events = events
 	results.PicturesUrls = picturesUrls
+
 	return results, nil
 }

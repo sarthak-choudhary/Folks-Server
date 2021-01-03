@@ -11,9 +11,10 @@ import (
 )
 
 //GetAllUsers - fetches all users from db
-func GetAllUsers(client *mongo.Client) (interface{}, error) {
+func GetAllUsers(client *mongo.Client) (models.Users, error) {
 	var result models.Users
 	var err error
+	emptyUsersObject := models.Users{}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -22,19 +23,24 @@ func GetAllUsers(client *mongo.Client) (interface{}, error) {
 	cur, err := collection.Find(ctx, bson.D{}, options.Find())
 
 	if err != nil {
-		return nil, err
+		return emptyUsersObject, err
 	}
+
 	for cur.Next(ctx) {
 		var user models.User
 		err = cur.Decode(&user)
+
 		if err != nil {
-			return nil, err
+			return emptyUsersObject, err
 		}
+
 		result = append(result, user)
 	}
+
 	if err = cur.Err(); err != nil {
-		return nil, err
+		return emptyUsersObject, err
 	}
+
 	cur.Close(ctx)
 	return result, nil
 }

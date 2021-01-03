@@ -12,9 +12,10 @@ import (
 )
 
 //GetAllEvents - fetches all events from db.
-func GetAllEvents(client *mongo.Client) (interface{}, error) {
+func GetAllEvents(client *mongo.Client) (models.Events, error) {
 	var result models.Events
 	var err error
+	emptyEventsObject := models.Events{}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -23,8 +24,9 @@ func GetAllEvents(client *mongo.Client) (interface{}, error) {
 	cur, err := collection.Find(ctx, bson.D{}, options.Find())
 
 	if err != nil {
-		return nil, err
+		return emptyEventsObject, err
 	}
+
 	for cur.Next(ctx) {
 		var event models.Event
 		err = cur.Decode(&event)
@@ -33,9 +35,11 @@ func GetAllEvents(client *mongo.Client) (interface{}, error) {
 		}
 		result = append(result, event)
 	}
+
 	if err = cur.Err(); err != nil {
-		return nil, err
+		return emptyEventsObject, err
 	}
+
 	cur.Close(ctx)
 	return result, nil
 }

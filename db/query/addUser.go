@@ -21,8 +21,8 @@ func AddUser(user *models.User, client *mongo.Client) (string, error) {
 		return "", err
 	}
 
-	_id := fmt.Sprintf("%s", insertResult.InsertedID)
+	id := fmt.Sprintf("%s", insertResult.InsertedID)
 
-	_id = _id[10:34]
-	return _id, nil
+	id = id[10:34]
+	return id, nil
 }

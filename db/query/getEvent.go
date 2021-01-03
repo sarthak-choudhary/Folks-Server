@@ -11,14 +11,15 @@ import (
 )
 
 //GetEvent - fetch event by _id
-func GetEvent(_id string, client *mongo.Client) (interface{}, error) {
+func GetEvent(_id string, client *mongo.Client) (models.Event, error) {
 	var result models.Event
 	var err error
+	emptyEventObject := models.Event{}
 
 	id, err := primitive.ObjectIDFromHex(_id)
 
 	if err != nil {
-		return nil, err
+		return emptyEventObject, err
 	}
 
 	q := bson.M{"_id": id}
@@ -27,8 +28,9 @@ func GetEvent(_id string, client *mongo.Client) (interface{}, error) {
 
 	collection := client.Database("folks").Collection("events")
 	err = collection.FindOne(ctx, q).Decode(&result)
+
 	if err != nil {
-		return nil, err
+		return emptyEventObject, err
 	}
 
 	return result, nil

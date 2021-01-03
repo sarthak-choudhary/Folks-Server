@@ -12,16 +12,18 @@ import (
 )
 
 // UpdateEvent updates the event
-func UpdateEvent (_id string, name string, description string, destination string, locationLatitude float32, locationLongitude float32, datetime time.Time, userID primitive.ObjectID, participants []primitive.ObjectID, picturesUrls []string, client *mongo.Client) (interface{}, error) {
+func UpdateEvent(_id string, name string, description string, destination string, locationLatitude float32, locationLongitude float32, datetime time.Time, userID primitive.ObjectID, participants []primitive.ObjectID, picturesUrls []string, client *mongo.Client) (models.Event, error) {
 	var err error
 	var results models.Event
+	emptyEventObject := models.Event{}
 
 	id, err := primitive.ObjectIDFromHex(_id)
-	if err != nil {
-		return nil, err
-	}
-	q := bson.M{"_id": id}
 
+	if err != nil {
+		return emptyEventObject, err
+	}
+
+	q := bson.M{"_id": id}
 	q2 := bson.M{"$set": bson.M{
 		"name":              name,
 		"description":       description,
@@ -36,8 +38,9 @@ func UpdateEvent (_id string, name string, description string, destination strin
 	defer cancel()
 	collection := client.Database("folks").Collection("events")
 	err = collection.FindOneAndUpdate(ctx, q, q2).Decode(&results)
+
 	if err != nil {
-		return nil, err
+		return emptyEventObject, err
 	}
 
 	err = errors.New("Event can only be modified by user who created it")
@@ -49,5 +52,6 @@ func UpdateEvent (_id string, name string, description string, destination strin
 	results.LocationLongitude = locationLongitude
 	results.Datetime = datetime
 	results.PicturesUrls = picturesUrls
+
 	return results, nil
 }

@@ -10,9 +10,10 @@ import (
 )
 
 //AddSquad - adds new squad to db.
-func AddSquad(name string, description string, groupImages []string, admins []primitive.ObjectID, members []primitive.ObjectID, invitesSent []primitive.ObjectID, client *mongo.Client) (interface{}, error) {
+func AddSquad(name string, description string, groupImages []string, admins []primitive.ObjectID, members []primitive.ObjectID, invitesSent []primitive.ObjectID, client *mongo.Client) (models.Squad, error) {
 	var err error
 	var squad models.Squad
+	emptySquadObject := models.Squad{}
 
 	squad.ID = primitive.NewObjectID()
 	squad.Name = name
@@ -29,7 +30,7 @@ func AddSquad(name string, description string, groupImages []string, admins []pr
 	_, err = collection.InsertOne(ctx, squad)
 
 	if err != nil {
-		return nil, err
+		return emptySquadObject, err
 	}
 
 	return squad, nil
