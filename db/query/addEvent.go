@@ -10,7 +10,7 @@ import (
 )
 
 //AddEvent - adds new event to db.
-func AddEvent(name string, description string, destination string, locationLatitude float32, locationLongitude float32, datetime time.Time, hostedBy primitive.ObjectID, participants []primitive.ObjectID, picturesUrls []string, client *mongo.Client) (models.Event, error) {
+func AddEvent(name string, description string, destination string, locationLatitude float64, locationLongitude float64, datetime time.Time, hostedBy primitive.ObjectID, inviteList []primitive.ObjectID, picturesUrls []string, admins []primitive.ObjectID, client *mongo.Client) (models.Event, error) {
 	var err error
 	var event models.Event
 	emptyEventObject := models.Event{}
@@ -24,9 +24,8 @@ func AddEvent(name string, description string, destination string, locationLatit
 	event.Datetime = datetime
 	event.CreatedOn = time.Now()
 	event.HostedBy = hostedBy
-	for _, k := range participants {
-		event.Participants = append(event.Participants, k)
-	}
+	event.InviteList = inviteList
+	event.Admins = admins
 	event.PicturesUrls = picturesUrls
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

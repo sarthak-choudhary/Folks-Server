@@ -111,15 +111,15 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 							Type: graphql.String,
 						},
 						"locationLatitude": &graphql.ArgumentConfig{
-							Type: graphql.Int,
+							Type: graphql.Float,
 						},
 						"locationLongitude": &graphql.ArgumentConfig{
-							Type: graphql.Int,
+							Type: graphql.Float,
 						},
 						"datetime": &graphql.ArgumentConfig{
 							Type: graphql.String,
 						},
-						"participants": &graphql.ArgumentConfig{
+						"inviteList": &graphql.ArgumentConfig{
 							Type: graphql.NewList(graphql.String),
 						},
 						"picturesUrls": &graphql.ArgumentConfig{
@@ -170,10 +170,85 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					},
 					Resolve: declineRequest,
 				},
+				"requestEvent": &graphql.Field{
+					Type: UserType,
+					Args: graphql.FieldConfigArgument{
+						"id": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: requestEvent,
+				},
+				"acceptParticipants": &graphql.Field{
+					Type: EventType,
+					Args: graphql.FieldConfigArgument{
+						"userID": &graphql.ArgumentConfig{
+							Type: graphql.NewList(graphql.String),
+						},
+						"eventID": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: acceptParticipants,
+				},
+				"declineParticipants": &graphql.Field{
+					Type: EventType,
+					Args: graphql.FieldConfigArgument{
+						"userID": &graphql.ArgumentConfig{
+							Type: graphql.NewList(graphql.String),
+						},
+						"eventID": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: declineParticipants,
+				},
+				"inviteParticipants": &graphql.Field{
+					Type: EventType,
+					Args: graphql.FieldConfigArgument{
+						"userID": &graphql.ArgumentConfig{
+							Type: graphql.NewList(graphql.String),
+						},
+						"eventID": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: inviteParticipants,
+				},
+				"assignAdmin": &graphql.Field{
+					Type: EventType,
+					Args: graphql.FieldConfigArgument{
+						"admins": &graphql.ArgumentConfig{
+							Type: graphql.NewList(graphql.String),
+						},
+						"eventID": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: assignAdmin,
+				},
+				"acceptInvite": &graphql.Field{
+					Type: UserType,
+					Args: graphql.FieldConfigArgument{
+						"eventID": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: acceptInvite,
+				},
+				"declineInvite": &graphql.Field{
+					Type: UserType,
+					Args: graphql.FieldConfigArgument{
+						"eventID": &graphql.ArgumentConfig{
+							Type: graphql.NewNonNull(graphql.String),
+						},
+					},
+					Resolve: declineInvite,
+				},
 				"updateEvent": &graphql.Field{
 					Type: EventType,
 					Args: graphql.FieldConfigArgument{
-						"_id": &graphql.ArgumentConfig{
+						"id": &graphql.ArgumentConfig{
 							Type: graphql.NewNonNull(graphql.String),
 						},
 						"description": &graphql.ArgumentConfig{
@@ -183,16 +258,13 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 							Type: graphql.String,
 						},
 						"locationLatitude": &graphql.ArgumentConfig{
-							Type: graphql.Int,
+							Type: graphql.Float,
 						},
 						"locationLongitude": &graphql.ArgumentConfig{
-							Type: graphql.Int,
+							Type: graphql.Float,
 						},
 						"datetime": &graphql.ArgumentConfig{
 							Type: graphql.String,
-						},
-						"participants": &graphql.ArgumentConfig{
-							Type: graphql.NewList(graphql.String),
 						},
 						"picturesUrls": &graphql.ArgumentConfig{
 							Type: graphql.NewList(graphql.String),

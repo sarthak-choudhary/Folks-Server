@@ -11,32 +11,24 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// UpdateEvent updates the event
-func UpdateEvent(id primitive.ObjectID, name string, description string, destination string, locationLatitude float64, locationLongitude float64, datetime time.Time, picturesUrls []string, client *mongo.Client) (models.Event, error) {
-	var err error
+//AssignAdmin function allows an admin to give admin status to other users also.
+func AssignAdmin(eventID primitive.ObjectID, admin_id []primitive.ObjectID, client *mongo.Client) (models.Event, error) {
 	var results models.Event
+	var err error
 	emptyEventObject := models.Event{}
 
-	q := bson.M{"_id": id}
-	q2 := bson.M{"$set": bson.M{
-		"name":              name,
-		"description":       description,
-		"destination":       destination,
-		"locationLatitude":  locationLatitude,
-		"locationLongitude": locationLongitude,
-		"datetime":          datetime,
-		"pictureUrls":       picturesUrls,
-	}}
+	q := bson.M{"_id": eventID}
+	q2 := bson.M{"$addToSet": bson.M{"admins": bson.M{"$each": admin_id}}}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
+	collection := client.Database("folks").Collection("events")
 	after := options.After
 	opt := options.FindOneAndUpdateOptions{
 		ReturnDocument: &after,
 	}
 
-	collection := client.Database("folks").Collection("events")
 	result := collection.FindOneAndUpdate(ctx, q, q2, &opt)
 
 	if result.Err() != nil {

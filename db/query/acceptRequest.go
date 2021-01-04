@@ -11,9 +11,11 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func AcceptRequest(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.Client) (interface{}, error) {
+//AcceptRequest function accepts the follow request of particular user
+func AcceptRequest(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.Client) (models.User, error) {
 	var results models.User
 	var err error
+	emptyUserObject := models.User{}
 
 	q := bson.M{"_id": id}
 	q2 := bson.M{"$pull": bson.M{"requestsReceived": userID}, "$inc": bson.M{"followedByCount": 1}}
@@ -31,13 +33,13 @@ func AcceptRequest(id primitive.ObjectID, userID primitive.ObjectID, client *mon
 	result := collection.FindOneAndUpdate(ctx, q, q2, &opt)
 
 	if result.Err() != nil {
-		return nil, result.Err()
+		return emptyUserObject, result.Err()
 	}
 
 	err = result.Decode(&results)
 
 	if err != nil {
-		return nil, err
+		return emptyUserObject, err
 	}
 
 	q = bson.M{"_id": userID}
@@ -45,7 +47,7 @@ func AcceptRequest(id primitive.ObjectID, userID primitive.ObjectID, client *mon
 	err = collection.FindOneAndUpdate(ctx, q, q2).Err()
 
 	if err != nil {
-		return nil, err
+		return emptyUserObject, err
 	}
 
 	return results, nil

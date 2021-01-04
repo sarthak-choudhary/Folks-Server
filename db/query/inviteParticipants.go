@@ -11,32 +11,24 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// UpdateEvent updates the event
-func UpdateEvent(id primitive.ObjectID, name string, description string, destination string, locationLatitude float64, locationLongitude float64, datetime time.Time, picturesUrls []string, client *mongo.Client) (models.Event, error) {
-	var err error
+//InviteParticipants functions allows admins to invite new participants for a particular event
+func InviteParticipants(eventID primitive.ObjectID, users []primitive.ObjectID, client *mongo.Client) (models.Event, error) {
 	var results models.Event
+	var err error
 	emptyEventObject := models.Event{}
 
-	q := bson.M{"_id": id}
-	q2 := bson.M{"$set": bson.M{
-		"name":              name,
-		"description":       description,
-		"destination":       destination,
-		"locationLatitude":  locationLatitude,
-		"locationLongitude": locationLongitude,
-		"datetime":          datetime,
-		"pictureUrls":       picturesUrls,
-	}}
+	q := bson.M{"_id": eventID}
+	q2 := bson.M{"$addToSet": bson.M{"invitelist": bson.M{"$each": users}}}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
+	collection := client.Database("folks").Collection("events")
 	after := options.After
 	opt := options.FindOneAndUpdateOptions{
 		ReturnDocument: &after,
 	}
 
-	collection := client.Database("folks").Collection("events")
 	result := collection.FindOneAndUpdate(ctx, q, q2, &opt)
 
 	if result.Err() != nil {
@@ -47,6 +39,19 @@ func UpdateEvent(id primitive.ObjectID, name string, description string, destina
 
 	if err != nil {
 		return emptyEventObject, err
+	}
+
+	collection = client.Database("folks").Collection("users")
+
+	for _, userID := range users {
+		q = bson.M{"_id": userID}
+		q2 = bson.M{"$addToSet": bson.M{"invitesReceived": eventID}}
+
+		result = collection.FindOneAndUpdate(ctx, q, q2)
+
+		if result.Err() != nil {
+			return emptyEventObject, result.Err()
+		}
 	}
 
 	return results, nil

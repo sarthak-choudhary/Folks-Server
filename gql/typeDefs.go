@@ -125,10 +125,10 @@ var EventType = graphql.NewObject(graphql.ObjectConfig{
 			Type: graphql.String,
 		},
 		"locationLatitude": &graphql.Field{
-			Type: graphql.Int,
+			Type: graphql.Float,
 		},
 		"locationLongitude": &graphql.Field{
-			Type: graphql.Int,
+			Type: graphql.Float,
 		},
 		"datetime": &graphql.Field{
 			Type: graphql.String,
@@ -146,6 +146,9 @@ var EventType = graphql.NewObject(graphql.ObjectConfig{
 			Type: graphql.NewList(graphql.String),
 		},
 		"waitlist": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
+		"admins": &graphql.Field{
 			Type: graphql.NewList(ID),
 		},
 		"invitelist": &graphql.Field{
