@@ -15,6 +15,9 @@ type User struct {
 	Email            string               `json:"email" bson:"email"`
 	Password         string               `json:"password,omitempty" bson:"password,omitempty"`
 	PhoneNo          string               `json:"phoneNo,omitempty" bson:"phoneNo,omitempty"`
+	Bio              string               `json:"bio,omitempty" bson:"bio,omitempty"`
+	Age              int64				  `json:"age,omitempty" bson:"age,omitempty"`
+	Gender			 int64				  `json:"gender,omitempty" bson:"gender,omitempty"`
 	Interests        []string             `json:"interests,omitempty" bson:"interests,omitempty"`
 	IsComplete       bool                 `json:"isComplete,omitempty" bson:"isComplete,omitempty"`
 	FollowedByCount  int64                `json:"followedByCount,omitempty" bson:"followedByCount,omitempty"`

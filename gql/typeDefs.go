@@ -72,6 +72,15 @@ var UserType = graphql.NewObject(graphql.ObjectConfig{
 		"phoneNo": &graphql.Field{
 			Type: graphql.String,
 		},
+		"bio": &graphql.Field{
+			Type: graphql.String,
+		},
+		"age": &graphql.Field{
+			Type: graphql.Int,
+		},
+		"gender": &graphql.Field{
+			Type: graphql.Int,
+		},
 		"interests": &graphql.Field{
 			Type: graphql.NewList(ID),
 		},

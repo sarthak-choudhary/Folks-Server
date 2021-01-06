@@ -68,6 +68,9 @@ func SignUp(client *mongo.Client) http.Handler {
 			LastName  string   `json:"lastName"`
 			Email     string   `json:"email"`
 			PhoneNo   string   `json:"phoneNo"`
+			Bio       string   `json:"bio"`
+			Gender    int64   `json:"gender"`
+			Age		  int64   `json:"age"`
 			Interests []string `json:"interests"`
 			Token     string   `json:"token"`
 		}{
@@ -76,6 +79,9 @@ func SignUp(client *mongo.Client) http.Handler {
 			LastName:  user.LastName,
 			Email:     user.Email,
 			PhoneNo:   user.PhoneNo,
+			Bio:       user.Bio,
+			Gender:    user.Gender,
+			Age:       user.Age,
 			Interests: user.Interests,
 			Token:     token,
 		}
@@ -133,19 +139,25 @@ func Login(client *mongo.Client) http.Handler {
 		}
 
 		payload := struct {
-			ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-			FirstName string             `json:"firstName"`
-			LastName  string             `json:"lastName"`
-			Email     string             `json:"email"`
-			PhoneNo   string             `json:"phoneNo"`
-			Interests []string           `json:"interests"`
-			Token     string             `json:"token"`
+			ID        primitive.ObjectID   `json:"_id,omitempty" bson:"_id,omitempty"`
+			FirstName string   `json:"firstName"`
+			LastName  string   `json:"lastName"`
+			Email     string   `json:"email"`
+			PhoneNo   string   `json:"phoneNo"`
+			Bio       string   `json:"bio"`
+			Gender    int64   `json:"gender"`
+			Age		  int64   `json:"age"`
+			Interests []string `json:"interests"`
+			Token     string   `json:"token"`
 		}{
 			ID:        user.ID,
 			FirstName: user.FirstName,
 			LastName:  user.LastName,
 			Email:     user.Email,
 			PhoneNo:   user.PhoneNo,
+			Bio:       user.Bio,
+			Gender:    user.Gender,
+			Age:       user.Age,
 			Interests: user.Interests,
 			Token:     token,
 		}
