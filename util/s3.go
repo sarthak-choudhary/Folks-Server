@@ -2,7 +2,7 @@ package util
 
 import (
 	"bytes"
-	"fmt"
+	"encoding/json"
 	"log"
 	"mime/multipart"
 	"net/http"
@@ -21,7 +21,7 @@ func uploadFileToS3(s *session.Session, file multipart.File, fileHeader *multipa
 	buffer := make([]byte, size)
 	file.Read(buffer)
 
-	tempFileName := "pictures/" + bson.NewObjectId().Hex() + filepath.Ext(fileHeader.Filename)
+	tempFileName := bson.NewObjectId().Hex() + filepath.Ext(fileHeader.Filename)
 
 	_, err := s3.New(s).PutObject(&s3.PutObjectInput{
 		Bucket:               aws.String("we-folks"),
@@ -48,15 +48,29 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseMultipartForm(maxSize)
 	if err != nil {
-		log.Println(err)
-		fmt.Fprintf(w, "Image too large. Max Size: %v", maxSize)
+		//Image size too large
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+
+		payload := struct {
+			Error string `json:"error"`
+		}{Error: "Image size more than 100MB"}
+
+		json.NewEncoder(w).Encode(payload)
 		return
 	}
 
 	file, fileHeader, err := r.FormFile("pictures")
 	if err != nil {
-		log.Println(err)
-		fmt.Fprintf(w, "could not get uploaded file")
+		//Could not get uploaded file
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+
+		payload := struct {
+			Error string `json:"error"`
+		}{Error: "Could not get uploaded file."}
+
+		json.NewEncoder(w).Encode(payload)
 		return
 	}
 	defer file.Close()
@@ -69,14 +83,27 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			"",
 		),
 	})
+
 	if err != nil {
-		fmt.Fprintf(w, "Could not create session")
+		//Could not create session with S3
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	fileName, err := uploadFileToS3(s, file, fileHeader)
 	if err != nil {
-		fmt.Fprintf(w, "Could not upload file to s3")
+		//Could not upload file to S3
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
-	fmt.Fprintf(w, "Image uploaded successfully: %v", fileName)
+	payload := struct {
+		FileName string `json:"filename"`
+	}{
+		FileName: fileName,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(payload)
 }
