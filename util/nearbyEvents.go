@@ -11,7 +11,7 @@ import (
 )
 
 // NearbyEvents - returns all the events in the circle of radius(r) of latitude(lat) and longitude(lon)
-func NearbyEvents(client *mongo.Client, lat float32, lon float32, r float32) (interface{}, error) {
+func NearbyEvents(client *mongo.Client, lat float64, lon float64, r float64) (interface{}, error) {
 	var result models.Events
 	latMin := lat - r
 	latMax := lat + r
@@ -43,7 +43,7 @@ func NearbyEvents(client *mongo.Client, lat float32, lon float32, r float32) (in
 }
 
 // NearbyEvents - returns all the events in the circle of radius(r) of latitude(lat) and longitude(lon)
-func NearbyEventsWithImages(client *mongo.Client, lat float32, lon float32, r float32) (interface{}, error) {
+func NearbyEventsWithImages(client *mongo.Client, lat float64, lon float64, r float64) (interface{}, error) {
 	var result models.Events
 	latMin := lat - r
 	latMax := lat + r
