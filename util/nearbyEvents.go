@@ -11,7 +11,7 @@ import (
 )
 
 // NearbyEvents - returns all the events in the circle of radius(r) of latitude(lat) and longitude(lon)
-func NearbyEvents(client *mongo.Client, lat float64, lon float64, r float64) (interface{}, error) {
+func NearbyEvents(client *mongo.Client, lat float64, lon float64, r float64) (models.Events, error) {
 	var result models.Events
 	latMin := lat - r
 	latMax := lat + r
@@ -42,8 +42,8 @@ func NearbyEvents(client *mongo.Client, lat float64, lon float64, r float64) (in
 	return result, nil
 }
 
-// NearbyEvents - returns all the events in the circle of radius(r) of latitude(lat) and longitude(lon)
-func NearbyEventsWithImages(client *mongo.Client, lat float64, lon float64, r float64) (interface{}, error) {
+// NearbyEventsWithImages - returns all the events in the circle of radius(r) of latitude(lat) and longitude(lon)
+func NearbyEventsWithImages(client *mongo.Client, lat float64, lon float64, r float64) (models.Events, error) {
 	var result models.Events
 	latMin := lat - r
 	latMax := lat + r
@@ -54,7 +54,7 @@ func NearbyEventsWithImages(client *mongo.Client, lat float64, lon float64, r fl
 	defer cancel()
 
 	collection := client.Database("folks").Collection("events")
-	cur, err := collection.Find(ctx, bson.M{"locationLatitude": bson.M{"$gt": latMin, "$lt": latMax}, "locationLongitude": bson.M{"$gt": lonMin, "$lt": lonMax}}, options.Find())
+	cur, err := collection.Find(ctx, bson.M{"locationLatitude": bson.M{"$gt": latMin, "$lt": latMax}, "locationLongitude": bson.M{"$gt": lonMin, "$lt": lonMax}, "picturesUrls": bson.M{"$exists": true, "$not": bson.M{"$size": 0}}}, options.Find())
 
 	if err != nil {
 		return nil, err
@@ -65,9 +65,7 @@ func NearbyEventsWithImages(client *mongo.Client, lat float64, lon float64, r fl
 		if err != nil {
 			return nil, err
 		}
-		if len(event.PicturesUrls) > 0 {
-			result = append(result, event)
-		}
+		result = append(result, event)
 	}
 	if err = cur.Err(); err != nil {
 		return nil, err

@@ -698,7 +698,7 @@ func getNearByEvents(rp graphql.ResolveParams) (interface{}, error) {
 	if rp.Args["locationLatitude"] != nil && rp.Args["locationLongitude"] != nil && rp.Args["radius"] != nil {
 		longitude = rp.Args["locationLongitude"].(float64)
 		latitude = rp.Args["locationLatitude"].(float64)
-		radius = rp.Args["locationLatitude"].(float64)
+		radius = rp.Args["radius"].(float64)
 	}
 	result, err := util.NearbyEvents(mongo.Session, latitude, longitude, radius)
 	if err != nil {
