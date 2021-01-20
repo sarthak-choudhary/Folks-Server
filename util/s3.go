@@ -78,8 +78,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	s, err := session.NewSession(&aws.Config{
 		Region: aws.String("ap-south-1"),
 		Credentials: credentials.NewStaticCredentials(
-			"AKIA4JUME47GBZXQ76VW",
-			"kH4BdpHoOttHJk88Nf9I5u4yuZXJUw06ATnaGZ6A",
+			"AKIA4JUME47GK5B7FMKX",
+			"e19XAPTiy2ktiFfau3NKWVdRm716USG9Ge5z6oCF",
 			"",
 		),
 	})
