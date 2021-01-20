@@ -111,6 +111,7 @@ func addEvent(p graphql.ResolveParams) (interface{}, error) {
 
 	user := p.Context.Value("user").(*models.User)
 	hostedBy := user.ID
+	owner := user.FirstName + " " + user.LastName
 
 	if p.Args["name"] != nil {
 		name = p.Args["name"].(string)
@@ -155,7 +156,7 @@ func addEvent(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	admins = append(admins, hostedBy)
-	result, err = query.AddEvent(name, description, destination, locationLatitude, locationLongitude, t, hostedBy, inviteList, picturesUrls, admins, mongo.Session)
+	result, err = query.AddEvent(name, description, destination, locationLatitude, locationLongitude, t, hostedBy, inviteList, picturesUrls, admins, owner, mongo.Session)
 	if err != nil {
 		return nil, err
 	}

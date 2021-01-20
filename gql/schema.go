@@ -27,13 +27,13 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					Resolve: getAllUsers,
 				},
 				"getAllSquads": &graphql.Field{
-					Type:   graphql.NewList(SquadType),
-					Args:   graphql.FieldConfigArgument{},
+					Type:    graphql.NewList(SquadType),
+					Args:    graphql.FieldConfigArgument{},
 					Resolve: getAllSquads,
 				},
 				"getEventByID": &graphql.Field{
-					Type: 	EventType,
-					Args: 	graphql.FieldConfigArgument{
+					Type: EventType,
+					Args: graphql.FieldConfigArgument{
 						"_id": &graphql.ArgumentConfig{
 							Type: graphql.NewNonNull(graphql.String),
 						},
@@ -117,7 +117,7 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 							Type: graphql.Float,
 						},
 						"datetime": &graphql.ArgumentConfig{
-							Type: graphql.String,
+							Type: graphql.NewNonNull(graphql.String),
 						},
 						"inviteList": &graphql.ArgumentConfig{
 							Type: graphql.NewList(graphql.String),
