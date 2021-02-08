@@ -18,7 +18,6 @@ func AddEvent(name string, description string, destination string, locationLatit
 	var err error
 	var event models.Event
 	emptyEventObject := models.Event{}
-
 	event.ID = primitive.NewObjectID()
 	event.Name = name
 	event.Description = description
@@ -41,13 +40,12 @@ func AddEvent(name string, description string, destination string, locationLatit
 		return emptyEventObject, err
 	}
 
-	fmt.Print("here")
 	var conn *g.ClientConn
-	conn, err = g.Dial("34.72.240.177:5050", g.WithInsecure())
+	conn, err = g.Dial("65.1.86.221:9000", g.WithInsecure())
 
 	if err != nil {
-		fmt.Print("Connection established")
-		log.Fatalf("Object could not be added in search Database")
+		fmt.Print("Connection not established\n")
+		log.Fatalf("Object could not be added in search Database\n")
 		return event, err
 	}
 
@@ -66,8 +64,8 @@ func AddEvent(name string, description string, destination string, locationLatit
 	_, err = c.AddItem(context.Background(), &item)
 
 	if err != nil {
-		fmt.Print("This is the problem")
-		log.Fatalf("Object could not be added in search Database")
+		fmt.Print("This is the problem\n")
+		log.Fatalf("Object could not be added in search Database\n")
 		return event, err
 	}
 

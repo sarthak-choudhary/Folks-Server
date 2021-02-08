@@ -26,7 +26,7 @@ func AddUser(user *models.User, client *mongo.Client) (string, error) {
 	id := fmt.Sprintf("%s", insertResult.InsertedID)
 
 	var conn *g.ClientConn
-	conn, err = g.Dial("34.72.240.177:5050", g.WithInsecure())
+	conn, err = g.Dial("65.1.86.221:9000", g.WithInsecure())
 
 	if err != nil {
 		log.Fatalf("Object Could not be added to search database")
