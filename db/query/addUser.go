@@ -5,11 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/WeFolks/search_service/grpc"
 	"github.com/anshalshukla/folks/db/models"
 
 	"go.mongodb.org/mongo-driver/mongo"
-	g "google.golang.org/grpc"
 )
 
 // AddUser adds a new user to the database
@@ -25,33 +23,33 @@ func AddUser(user *models.User, client *mongo.Client) (string, error) {
 
 	id := fmt.Sprintf("%s", insertResult.InsertedID)
 
-	var conn *g.ClientConn
-	conn, err = g.Dial("65.1.86.221:9000", g.WithInsecure())
+	//var conn *g.ClientConn
+	//conn, err = g.Dial("65.1.86.221:9000", g.WithInsecure())
+	//
+	//if err != nil {
+	//	log.Fatalf("Object Could not be added to search database")
+	//	return id, err
+	//}
+	//
+	//defer conn.Close()
 
-	if err != nil {
-		log.Fatalf("Object Could not be added to search database")
-		return id, err
-	}
-
-	defer conn.Close()
-
-	c := grpc.NewSearchServiceClient(conn)
-
-	item := grpc.Item{
-		Id:          id,
-		Name:        user.FirstName + " " + user.LastName,
-		Owner:       "",
-		Category:    "",
-		Description: "",
-		Type:        0,
-	}
-
-	_, err = c.AddItem(context.Background(), &item)
-
-	if err != nil {
-		log.Fatalf("Object Could not be added to search database")
-		return id, err
-	}
+	//c := grpc.NewSearchServiceClient(conn)
+	//
+	//item := grpc.Item{
+	//	Id:          id,
+	//	Name:        user.FirstName + " " + user.LastName,
+	//	Owner:       "",
+	//	Category:    "",
+	//	Description: "",
+	//	Type:        0,
+	//}
+	//
+	//_, err = c.AddItem(context.Background(), &item)
+	//
+	//if err != nil {
+	//	log.Fatalf("Object Could not be added to search database")
+	//	return id, err
+	//}
 
 	id = id[10:34]
 	return id, nil

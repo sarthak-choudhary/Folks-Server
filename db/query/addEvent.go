@@ -2,15 +2,11 @@ package query
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"time"
 
-	"github.com/WeFolks/search_service/grpc"
 	"github.com/anshalshukla/folks/db/models"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	g "google.golang.org/grpc"
 )
 
 //AddEvent - adds new event to db.
@@ -40,34 +36,34 @@ func AddEvent(name string, description string, destination string, locationLatit
 		return emptyEventObject, err
 	}
 
-	var conn *g.ClientConn
-	conn, err = g.Dial("65.1.86.221:9000", g.WithInsecure())
-
-	if err != nil {
-		fmt.Print("Connection not established\n")
-		log.Fatalf("Object could not be added in search Database\n")
-		return event, err
-	}
-
-	defer conn.Close()
-
-	c := grpc.NewSearchServiceClient(conn)
-
-	item := grpc.Item{
-		Id:          event.ID.Hex(),
-		Name:        event.Name,
-		Owner:       owner,
-		Description: event.Description,
-		Type:        1,
-	}
-
-	_, err = c.AddItem(context.Background(), &item)
-
-	if err != nil {
-		fmt.Print("This is the problem\n")
-		log.Fatalf("Object could not be added in search Database\n")
-		return event, err
-	}
+	//var conn *g.ClientConn
+	//conn, err = g.Dial("65.1.86.221:9000", g.WithInsecure())
+	//
+	//if err != nil {
+	//	fmt.Print("Connection not established\n")
+	//	log.Fatalf("Object could not be added in search Database\n")
+	//	return event, err
+	//}
+	//
+	//defer conn.Close()
+	//
+	//c := grpc.NewSearchServiceClient(conn)
+	//
+	//item := grpc.Item{
+	//	Id:          event.ID.Hex(),
+	//	Name:        event.Name,
+	//	Owner:       owner,
+	//	Description: event.Description,
+	//	Type:        1,
+	//}
+	//
+	//_, err = c.AddItem(context.Background(), &item)
+	//
+	//if err != nil {
+	//	fmt.Print("This is the problem\n")
+	//	log.Fatalf("Object could not be added in search Database\n")
+	//	return event, err
+	//}
 
 	return event, nil
 }

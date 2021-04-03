@@ -272,6 +272,18 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					},
 					Resolve: updateEvent,
 				},
+				"changePassword": &graphql.Field{
+					Type: UserType,
+					Args: graphql.FieldConfigArgument{
+						"oldPassword": &graphql.ArgumentConfig{
+							Type: graphql.String,
+						},
+						"newPassword": &graphql.ArgumentConfig{
+							Type: graphql.String,
+						},
+					},
+					Resolve: changePassword,
+				},
 			},
 		}),
 		Types: []graphql.Type{ID, UserType, EventType, SquadType},

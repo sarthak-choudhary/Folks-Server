@@ -723,3 +723,20 @@ func getNearByEventsWithImages(rp graphql.ResolveParams) (interface{}, error) {
 	}
 	return result, nil
 }
+
+func changePassword(rp graphql.ResolveParams) (interface{}, error)	{
+	var newPassword string
+	var oldPassword string
+	user := rp.Context.Value("user").(*models.User)
+	id := user.ID
+
+	if rp.Args["newPassword"] != nil && rp.Args["oldPassword"] != nil {
+		newPassword = rp.Args["newPassword"].(string)
+		oldPassword = rp.Args["oldPassword"].(string)
+	}
+	result, err := query.ChangePassword(oldPassword, newPassword, id, mongo.Session)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
