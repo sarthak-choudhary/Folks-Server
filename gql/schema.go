@@ -93,6 +93,16 @@ func InitSchema(d *db.MongoDB) graphql.Schema {
 					},
 					Resolve: getNearByEventsWithImages,
 				},
+				"getPastEvents": &graphql.Field{
+					Type: graphql.NewList(EventType),
+					Args: graphql.FieldConfigArgument{},
+					Resolve: getPastEvents,
+				},
+				"getUpcommingEvents": &graphql.Field{
+					Type: graphql.NewList(EventType),
+					Args: graphql.FieldConfigArgument{},
+					Resolve: getUpcommingEvents,
+				},
 			},
 		}),
 		Mutation: graphql.NewObject(graphql.ObjectConfig{

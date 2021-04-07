@@ -740,3 +740,25 @@ func changePassword(rp graphql.ResolveParams) (interface{}, error)	{
 	}
 	return result, nil
 }
+
+func getUpcommingEvents(rp graphql.ResolveParams) (interface{}, error)	{
+	user := rp.Context.Value("user").(*models.User)
+	id := user.ID
+
+	result, err := query.GetUpcommingEvents(id.String(), mongo.Session)
+	if err != nil {
+		return nil, err
+	}
+	return result, err
+}
+
+func getPastEvents(rp graphql.ResolveParams) (interface{}, error)	{
+	user := rp.Context.Value("user").(*models.User)
+	id := user.ID
+
+	result, err := query.GetPastEvents(id.String(), mongo.Session)
+	if err != nil {
+		return nil, err
+	}
+	return result, err
+}
