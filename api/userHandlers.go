@@ -45,8 +45,37 @@ func SignUp(client *mongo.Client) http.Handler {
 			return
 		}
 
+		_, err = query.GetUserByPhoneNo(user.PhoneNo, client)
+
+		if err == nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusBadRequest)
+
+			payload := struct {
+				Error string `json:"error"`
+			}{Error: "User with this phone number already exists"}
+
+			json.NewEncoder(w).Encode(payload)
+			return
+		}
+
+		//_, err = query.GetUserByUsername(user.Username, client)
+		//
+		//if err == nil {
+		//	w.Header().Set("Content-Type", "application/json")
+		//	w.WriteHeader(http.StatusBadRequest)
+		//
+		//	payload := struct {
+		//		Error string `json:"error"`
+		//	}{Error: "User with this username already exists"}
+		//
+		//	json.NewEncoder(w).Encode(payload)
+		//	return
+		//}
+
 		user.Password, _ = util.HashPassword(user.Password)
 		user.IsComplete = true
+		user.IsPublic	=	false
 
 		_id, err := query.AddUser(&user, client)
 
@@ -69,10 +98,11 @@ func SignUp(client *mongo.Client) http.Handler {
 			Email     string   `json:"email"`
 			PhoneNo   string   `json:"phoneNo"`
 			Bio       string   `json:"bio"`
-			Gender    int64   `json:"gender"`
-			Age		  int64   `json:"age"`
+			Gender    int64    `json:"gender"`
+			Age		  int64    `json:"age"`
 			Interests []string `json:"interests"`
 			Token     string   `json:"token"`
+			Username  string   `json:"username"`
 		}{
 			ID:        _id,
 			FirstName: user.FirstName,
@@ -84,6 +114,7 @@ func SignUp(client *mongo.Client) http.Handler {
 			Age:       user.Age,
 			Interests: user.Interests,
 			Token:     token,
+			Username:  user.Username,
 		}
 
 		w.Header().Set("Content-Type", "application/json")

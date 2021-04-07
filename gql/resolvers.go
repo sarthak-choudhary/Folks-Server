@@ -762,3 +762,8 @@ func getPastEvents(rp graphql.ResolveParams) (interface{}, error)	{
 	}
 	return result, err
 }
+
+//func updateUser(rp graphql.ResolveParams) (interface{}, error)	{
+//	var result models.User
+//	var firstname, lastname, phoneNo
+//}
