@@ -6,34 +6,33 @@ import (
 	"time"
 
 	"github.com/anshalshukla/folks/db/models"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"gopkg.in/mgo.v2/bson"
 )
 
 // UpdateUser updates the user
-func UpdateUser(_id string, firstname string, lastname string, phoneNo string, interests []string, isComplete bool, followedByCount int64, following []primitive.ObjectID, events []primitive.ObjectID, picturesUrls []string, client *mongo.Client) (models.User, error) {
+func UpdateUser(u *models.User, client *mongo.Client) (models.User, error) {
 	var err error
 	var results models.User
 	emptyUserObject := models.User{}
-
-	id, err := primitive.ObjectIDFromHex(_id)
 
 	if err != nil {
 		return emptyUserObject, err
 	}
 
-	q := bson.M{"_id": id}
+	q := bson.M{"_id": u.ID}
 	q2 := bson.M{"$set": bson.M{
-		"firstname":       firstname,
-		"lastname":        lastname,
-		"phoneNo":         phoneNo,
-		"interests":       interests,
-		"isComplete":      isComplete,
-		"followedByCount": followedByCount,
-		"following":       following,
-		"events":          events,
-		"pictureUrls":     picturesUrls,
+		"firstname":       u.FirstName,
+		"lastname":        u.LastName,
+		"phoneNo":         u.PhoneNo,
+		"interests":       u.Interests,
+		"isComplete":      u.IsComplete,
+		"followedByCount": u.FollowedByCount,
+		"following":       u.Following,
+		"events":          u.Events,
+		"pictureUrls":     u.PicturesUrls,
+		"isPublic":		   u.IsPublic,
+		"username":		   u.Username,
 	}}
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -46,15 +45,18 @@ func UpdateUser(_id string, firstname string, lastname string, phoneNo string, i
 
 	err = errors.New("User info can only be modified only by user himself")
 
-	results.FirstName = firstname
-	results.LastName = lastname
-	results.PhoneNo = phoneNo
-	results.Interests = interests
-	results.IsComplete = isComplete
-	results.FollowedByCount = followedByCount
-	results.Following = following
-	results.Events = events
-	results.PicturesUrls = picturesUrls
+	results.FirstName = u.FirstName
+	results.LastName = u.LastName
+	results.PhoneNo = u.PhoneNo
+	results.Interests = u.Interests
+	results.IsComplete = u.IsComplete
+	results.FollowedByCount = u.FollowedByCount
+	results.Following = u.Following
+	results.Events = u.Events
+	results.PicturesUrls = u.PicturesUrls
+	results.Username = u.Username
+	results.IsPublic = u.IsPublic
 
 	return results, nil
 }
+

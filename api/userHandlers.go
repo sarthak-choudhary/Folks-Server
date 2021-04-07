@@ -59,19 +59,19 @@ func SignUp(client *mongo.Client) http.Handler {
 			return
 		}
 
-		//_, err = query.GetUserByUsername(user.Username, client)
-		//
-		//if err == nil {
-		//	w.Header().Set("Content-Type", "application/json")
-		//	w.WriteHeader(http.StatusBadRequest)
-		//
-		//	payload := struct {
-		//		Error string `json:"error"`
-		//	}{Error: "User with this username already exists"}
-		//
-		//	json.NewEncoder(w).Encode(payload)
-		//	return
-		//}
+		_, err = query.GetUserByUsername(user.Username, client)
+
+		if err == nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusBadRequest)
+
+			payload := struct {
+				Error string `json:"error"`
+			}{Error: "User with this username already exists"}
+
+			json.NewEncoder(w).Encode(payload)
+			return
+		}
 
 		user.Password, _ = util.HashPassword(user.Password)
 		user.IsComplete = true

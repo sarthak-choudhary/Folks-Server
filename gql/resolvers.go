@@ -763,7 +763,37 @@ func getPastEvents(rp graphql.ResolveParams) (interface{}, error)	{
 	return result, err
 }
 
-//func updateUser(rp graphql.ResolveParams) (interface{}, error)	{
-//	var result models.User
-//	var firstname, lastname, phoneNo
-//}
+func updateUser(rp graphql.ResolveParams) (interface{}, error)	{
+	var result models.User
+	user := rp.Context.Value("user").(*models.User)
+
+	if rp.Args["username"] != nil {
+		_, err := query.GetUserByUsername(user.Username, mongo.Session)
+		if err == nil {
+			return nil, errors.New("Username already exists. Please provide a unique username.")
+		}
+		user.Username = rp.Args["username"].(string)
+	}
+	if rp.Args["phoneNo"] != nil {
+		_, err := query.GetUserByPhoneNo(user.PhoneNo, mongo.Session)
+		if err == nil {
+			return nil, errors.New("Phone number already exists. Please provide a unique phone number.")
+		}
+		user.PhoneNo = rp.Args["phoneNo"].(string)
+	}
+	if rp.Args["firstname"] != nil {
+		user.FirstName = rp.Args["firstname"].(string)
+	}
+	if rp.Args["lastname"] != nil {
+		user.LastName = rp.Args["lastname"].(string)
+	}
+	if rp.Args["isPublic"] != nil {
+		user.IsPublic = rp.Args["isPublic"].(bool)
+	}
+
+	result, err := query.UpdateUser(user, mongo.Session)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
