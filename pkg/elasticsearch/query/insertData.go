@@ -26,6 +26,7 @@ func InsertData(ctx context.Context, esclient *elastic.Client, name, id, categor
 	_, err = esclient.Index().Index("search_data").BodyJson(js).Do(ctx)
 
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 

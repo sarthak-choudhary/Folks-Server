@@ -20,7 +20,7 @@ type Model struct {
 func GetESClient() (*elastic.Client, error) {
 	// 143.110.242.208
 	//client, err := elastic.NewClient(elastic.SetURL("http://elastic:Wethefolks@123@lb-uzja7dl7ropiy.centralindia.cloudapp.azure.com:9200"), elastic.SetHealthcheck(false), elastic.SetSniff(false))
-	client, err := elastic.NewClient(elastic.SetURL("http:143.110.242.208:9200"), elastic.SetHealthcheck(false), elastic.SetSniff(false))
+	client, err := elastic.NewClient(elastic.SetURL("http://143.110.242.208:9200"), elastic.SetHealthcheck(false), elastic.SetSniff(false))
 
 	if err != nil {
 		return nil, err

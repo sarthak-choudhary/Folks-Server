@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/anshalshukla/folks/pkg/elasticsearch/query"
 	"net/http"
 	"time"
@@ -31,8 +32,9 @@ func GetData(esclient *elastic.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var body Body
 		err := json.NewDecoder(r.Body).Decode(&body)
-		println("ashjdfkadshf")
+
 		if err != nil {
+			println("i was here")
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusBadRequest)
 			payload := struct {
@@ -48,6 +50,7 @@ func GetData(esclient *elastic.Client) http.Handler {
 		result, err := query.Data(ctx, esclient, body.Name, body.Category)
 
 		if err != nil {
+			fmt.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
