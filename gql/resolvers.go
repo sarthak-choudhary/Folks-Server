@@ -156,7 +156,7 @@ func addEvent(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	admins = append(admins, hostedBy)
-	result, err = query.AddEvent(name, description, destination, locationLatitude, locationLongitude, t, hostedBy, inviteList, picturesUrls, admins, owner, mongo.Session)
+	result, err = query.AddEvent(name, description, destination, locationLatitude, locationLongitude, t, hostedBy, inviteList, picturesUrls, admins, owner, mongo.Session, elasti)
 	if err != nil {
 		return nil, err
 	}

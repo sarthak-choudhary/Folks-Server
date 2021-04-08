@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"github.com/olivere/elastic/v7"
 	"log"
 	"net/http"
 
@@ -16,7 +17,7 @@ import (
 )
 
 // SignUp endpoint to add user to the database
-func SignUp(client *mongo.Client) http.Handler {
+func SignUp(client *mongo.Client, ec *elastic.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var user models.User
 		err := json.NewDecoder(r.Body).Decode(&user)
@@ -77,7 +78,7 @@ func SignUp(client *mongo.Client) http.Handler {
 		user.IsComplete = true
 		user.IsPublic	=	false
 
-		_id, err := query.AddUser(&user, client)
+		_id, err := query.AddUser(&user, client, ec)
 
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -202,7 +203,7 @@ func Login(client *mongo.Client) http.Handler {
 }
 
 //GoogleOauth enables signup with google
-func GoogleOauth(client *mongo.Client) http.Handler {
+func GoogleOauth(client *mongo.Client, ec *elastic.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var data struct {
 			IDToken string `json:"id_token"`
@@ -299,7 +300,7 @@ func GoogleOauth(client *mongo.Client) http.Handler {
 			newUser.LastName = tokenInfo.FamilyName
 			newUser.IsComplete = false
 
-			_id, err := query.AddUser(&newUser, client)
+			_id, err := query.AddUser(&newUser, client, ec)
 
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)

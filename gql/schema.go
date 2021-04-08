@@ -1,6 +1,7 @@
 package gql
 
 import (
+	"github.com/olivere/elastic/v7"
 	"log"
 
 	"github.com/anshalshukla/folks/db"
@@ -8,10 +9,11 @@ import (
 )
 
 var mongo *db.MongoDB
-
+var elasti *elastic.Client
 // InitSchema - defines complete graphql schema
-func InitSchema(d *db.MongoDB) graphql.Schema {
+func InitSchema(d *db.MongoDB, ec *elastic.Client) graphql.Schema {
 	mongo = d
+	elasti = ec
 	graphqlSchema, err := graphql.NewSchema(graphql.SchemaConfig{
 		Query: graphql.NewObject(graphql.ObjectConfig{
 			Name: "Query",

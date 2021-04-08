@@ -2,10 +2,9 @@ package query
 
 import (
 	"context"
-	"fmt"
-	"github.com/WeFolks/search_service/grpc"
-	g "google.golang.org/grpc"
-	"log"
+	"github.com/anshalshukla/folks/pkg/elasticsearch/query"
+	"github.com/olivere/elastic/v7"
+	"strconv"
 	"time"
 
 	"github.com/anshalshukla/folks/db/models"
@@ -14,7 +13,7 @@ import (
 )
 
 //AddEvent - adds new event to db.
-func AddEvent(name string, description string, destination string, locationLatitude float64, locationLongitude float64, datetime time.Time, hostedBy primitive.ObjectID, inviteList []primitive.ObjectID, picturesUrls []string, admins []primitive.ObjectID, owner string, client *mongo.Client) (models.Event, error) {
+func AddEvent(name string, description string, destination string, locationLatitude float64, locationLongitude float64, datetime time.Time, hostedBy primitive.ObjectID, inviteList []primitive.ObjectID, picturesUrls []string, admins []primitive.ObjectID, owner string, client *mongo.Client, ec *elastic.Client) (models.Event, error) {
 	var err error
 	var event models.Event
 	emptyEventObject := models.Event{}
@@ -41,33 +40,37 @@ func AddEvent(name string, description string, destination string, locationLatit
 		return emptyEventObject, err
 	}
 
-	var conn *g.ClientConn
-	conn, err = g.Dial("3.142.74.30:9000", g.WithInsecure())
-
-	if err != nil {
-		fmt.Print("Connection not established\n")
-		log.Fatalf("Object could not be added in search Database\n")
-		return event, err
-	}
-
-	defer conn.Close()
-
-	c := grpc.NewSearchServiceClient(conn)
-
-	item := grpc.Item{
-		Id:          event.ID.Hex(),
-		Name:        event.Name,
-		Owner:       owner,
-		Description: event.Description,
-		Type:        1,
-	}
-
-	_, err = c.AddItem(context.Background(), &item)
-
-	if err != nil {
-		fmt.Print("This is the problem\n")
-		log.Fatalf("Object could not be added in search Database\n")
-		return event, err
+	//var conn *g.ClientConn
+	//conn, err = g.Dial("3.142.74.30:9000", g.WithInsecure())
+	//
+	//if err != nil {
+	//	fmt.Print("Connection not established\n")
+	//	log.Fatalf("Object could not be added in elasticsearch Database\n")
+	//	return event, err
+	//}
+	//
+	//defer conn.Close()
+	//
+	//c := grpc.NewSearchServiceClient(conn)
+	//
+	//item := grpc.Item{
+	//	Id:          event.ID.Hex(),
+	//	Name:        event.Name,
+	//	Owner:       owner,
+	//	Description: event.Description,
+	//	Type:        1,
+	//}
+	//
+	//_, err = c.AddItem(context.Background(), &item)
+	//
+	//if err != nil {
+	//	fmt.Print("This is the problem\n")
+	//	log.Fatalf("Object could not be added in elasticsearch Database\n")
+	//	return event, err
+	//
+	err = query.InsertData(ctx, ec, event.Name, event.ID.Hex(), strconv.FormatInt(event.Category, 10),owner, event.Description, 1)
+	if err != nil{
+		return emptyEventObject, err
 	}
 
 	return event, nil
