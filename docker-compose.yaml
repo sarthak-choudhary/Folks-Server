@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  folks_server:
+    container_name: folks_server
+    restart: unless-stopped
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      - PORT_FOR_WEBAPP=8080
+    ports:
+      -   8080:8080
+  nginx:
+    container_name: nginx
+    image: nginx:mainline-alpine
+    restart: always
+    ports:
+      -   443:443
+      -   80:80
+    volumes:
+      -   ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      -   ./nginx/logs:/etc/nginx/logs
+      -   ./data/certbot/conf:/etc/letsencrypt
+      -   ./data/certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    depends_on:
+      -   folks_server
+  certbot:
+    image: certbot/certbot
+    volumes:
+      -   ./data/certbot/conf:/etc/letsencrypt
+      -   ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
