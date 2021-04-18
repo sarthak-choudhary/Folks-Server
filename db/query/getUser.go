@@ -31,9 +31,12 @@ func GetUser(email string, client *mongo.Client) (*models.User, error) {
 func GetUserByPhoneNo(phoneNo string, client *mongo.Client) (*models.User, error) {
 	var result models.User
 
-	filter := bson.D{{"phoneNo", phoneNo}}
+	filter := bson.M{"phoneNo": phoneNo}
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
 	collection := client.Database("folks").Collection("users")
-	err := collection.FindOne(context.TODO(), filter).Decode(&result)
+	err := collection.FindOne(ctx, filter).Decode(&result)
 
 	if err != nil {
 		return nil, err

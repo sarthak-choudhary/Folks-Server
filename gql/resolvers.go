@@ -768,15 +768,22 @@ func updateUser(rp graphql.ResolveParams) (interface{}, error)	{
 	user := rp.Context.Value("user").(*models.User)
 
 	if rp.Args["username"] != nil {
-		_, err := query.GetUserByUsername(user.Username, mongo.Session)
+		if rp.Args["username"] == ""	{
+			return nil, errors.New("Username cant be an empty string.")
+		}
+		_, err := query.GetUserByUsername(rp.Args["username"].(string), mongo.Session)
 		if err == nil {
 			return nil, errors.New("Username already exists. Please provide a unique username.")
 		}
 		user.Username = rp.Args["username"].(string)
 	}
 	if rp.Args["phoneNo"] != nil {
-		_, err := query.GetUserByPhoneNo(user.PhoneNo, mongo.Session)
+		if rp.Args["phoneNo"] == ""	{
+			return nil, errors.New("Empty string cant be a phone number.")
+		}
+		_, err := query.GetUserByPhoneNo(rp.Args["phoneNo"].(string), mongo.Session)
 		if err == nil {
+			//fmt.Println(u.PhoneNo)
 			return nil, errors.New("Phone number already exists. Please provide a unique phone number.")
 		}
 		user.PhoneNo = rp.Args["phoneNo"].(string)
