@@ -788,11 +788,11 @@ func updateUser(rp graphql.ResolveParams) (interface{}, error)	{
 		}
 		user.PhoneNo = rp.Args["phoneNo"].(string)
 	}
-	if rp.Args["firstname"] != nil {
-		user.FirstName = rp.Args["firstname"].(string)
+	if rp.Args["firstName"] != nil {
+		user.FirstName = rp.Args["firstName"].(string)
 	}
-	if rp.Args["lastname"] != nil {
-		user.LastName = rp.Args["lastname"].(string)
+	if rp.Args["lastName"] != nil {
+		user.LastName = rp.Args["lastName"].(string)
 	}
 	if rp.Args["isPublic"] != nil {
 		user.IsPublic = rp.Args["isPublic"].(bool)

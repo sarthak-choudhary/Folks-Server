@@ -305,10 +305,10 @@ func InitSchema(d *db.MongoDB, ec *elastic.Client) graphql.Schema {
 						"phoneNo": &graphql.ArgumentConfig{
 							Type: graphql.String,
 						},
-						"firstname": &graphql.ArgumentConfig{
+						"firstName": &graphql.ArgumentConfig{
 							Type: graphql.String,
 						},
-						"lastname": &graphql.ArgumentConfig{
+						"lastName": &graphql.ArgumentConfig{
 							Type: graphql.String,
 						},
 						"isPublic": &graphql.ArgumentConfig{
