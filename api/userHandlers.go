@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/anshalshukla/folks/db/models"
-	"github.com/anshalshukla/folks/db/query"
-	"github.com/anshalshukla/folks/util"
+	"github.com/wefolks/backend/db/models"
+	"github.com/wefolks/backend/db/query"
+	"github.com/wefolks/backend/util"
 
 	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson/primitive"

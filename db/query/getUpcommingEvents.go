@@ -2,7 +2,7 @@ package query
 
 import (
 	"context"
-	"github.com/anshalshukla/folks/db/models"
+	"github.com/wefolks/backend/db/models"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"gopkg.in/mgo.v2/bson"

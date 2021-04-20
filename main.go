@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
+	elasticsearch2 "github.com/wefolks/backend/elasticsearch"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/anshalshukla/folks/api"
-	"github.com/anshalshukla/folks/db"
-	"github.com/anshalshukla/folks/gql"
-	"github.com/anshalshukla/folks/middleware"
-	"github.com/anshalshukla/folks/pkg/elasticsearch"
-	"github.com/anshalshukla/folks/util"
+	"github.com/wefolks/backend/api"
+	"github.com/wefolks/backend/db"
+	"github.com/wefolks/backend/gql"
+	"github.com/wefolks/backend/middleware"
+	"github.com/wefolks/backend/util"
 	"github.com/graphql-go/handler"
 )
 
@@ -24,7 +24,7 @@ func main() {
 	client := dbConnection.Session
 
 	// Elasticsearch client generation
-	elastiClient, err := elasticsearch.GetESClient()
+	elastiClient, err := elasticsearch2.GetESClient()
 	if err != nil {
 		log.Fatal("Elastic Search client can't be setup", err)
 		return

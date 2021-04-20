@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/anshalshukla/folks/db/models"
-	"github.com/anshalshukla/folks/db/query"
+	"github.com/wefolks/backend/db/models"
+	"github.com/wefolks/backend/db/query"
 
 	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/mongo"

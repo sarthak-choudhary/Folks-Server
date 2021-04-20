@@ -3,8 +3,8 @@ package query
 import (
 	"context"
 	"fmt"
-	"github.com/anshalshukla/folks/db/models"
-	"github.com/anshalshukla/folks/pkg/elasticsearch/query"
+	"github.com/wefolks/backend/db/models"
+	query2 "github.com/wefolks/backend/elasticsearch/query"
 	"github.com/olivere/elastic/v7"
 	"log"
 
@@ -52,7 +52,7 @@ func AddUser(user *models.User, client *mongo.Client, ec *elastic.Client) (strin
 	//	return id, err
 	//}
 	userFullName := user.FirstName+" "+user.LastName
-	err = query.InsertData(context.TODO(), ec, userFullName, id, "", "", "", 0)
+	err = query2.InsertData(context.TODO(), ec, userFullName, id, "", "", "", 0)
 
 	id = id[10:34]
 	return id, nil

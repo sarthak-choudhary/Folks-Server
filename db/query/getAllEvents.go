@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/anshalshukla/folks/db/models"
+	"github.com/wefolks/backend/db/models"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

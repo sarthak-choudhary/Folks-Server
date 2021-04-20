@@ -4,7 +4,7 @@ import (
 	"github.com/olivere/elastic/v7"
 	"log"
 
-	"github.com/anshalshukla/folks/db"
+	"github.com/wefolks/backend/db"
 	"github.com/graphql-go/graphql"
 )
 

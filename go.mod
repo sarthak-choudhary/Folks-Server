@@ -1,4 +1,4 @@
-module github.com/anshalshukla/folks
+module github.com/wefolks/backend
 
 go 1.14
 

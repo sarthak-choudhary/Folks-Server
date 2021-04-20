@@ -2,12 +2,12 @@ package query
 
 import (
 	"context"
-	"github.com/anshalshukla/folks/pkg/elasticsearch/query"
+	query2 "github.com/wefolks/backend/elasticsearch/query"
 	"github.com/olivere/elastic/v7"
 	"strconv"
 	"time"
 
-	"github.com/anshalshukla/folks/db/models"
+	"github.com/wefolks/backend/db/models"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -68,7 +68,7 @@ func AddEvent(name string, description string, destination string, locationLatit
 	//	log.Fatalf("Object could not be added in elasticsearch Database\n")
 	//	return event, err
 	//
-	err = query.InsertData(ctx, ec, event.Name, event.ID.Hex(), strconv.FormatInt(event.Category, 10),owner, event.Description, 1)
+	err = query2.InsertData(ctx, ec, event.Name, event.ID.Hex(), strconv.FormatInt(event.Category, 10),owner, event.Description, 1)
 	if err != nil{
 		return emptyEventObject, err
 	}

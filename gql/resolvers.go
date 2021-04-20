@@ -4,12 +4,12 @@ import (
 	"errors"
 	"time"
 
-	"github.com/anshalshukla/folks/util"
+	"github.com/wefolks/backend/util"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/anshalshukla/folks/db/models"
-	"github.com/anshalshukla/folks/db/query"
+	"github.com/wefolks/backend/db/models"
+	"github.com/wefolks/backend/db/query"
 
 	"github.com/graphql-go/graphql"
 )

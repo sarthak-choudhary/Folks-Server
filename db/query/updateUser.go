@@ -6,7 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
 
-	"github.com/anshalshukla/folks/db/models"
+	"github.com/wefolks/backend/db/models"
 	"go.mongodb.org/mongo-driver/mongo"
 	"gopkg.in/mgo.v2/bson"
 )
