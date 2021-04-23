@@ -30,6 +30,7 @@ type User struct {
 	InvitesSent      []primitive.ObjectID `json:"invitesSent,omitempty" bson:"invitesSent,omitempty"`
 	InvitesReceived  []primitive.ObjectID `json:"invitesReceived,omitempty" bson:"invitesReceived,omitempty"`
 	PicturesUrls     []string             `bson:"picturesUrls,omitempty" json:"picturesUrls,omitempty"`
+	FcmToken		 []string			  `bson:"fcmToken,omitempty" json:"fcmToken,omitempty"`
 }
 
 //Users - Slice of Users
@@ -41,7 +42,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-//GenerateJWT generates a jwt for a user
+//GenerateJWT generates a jwt for a user-queries
 func (u User) GenerateJWT() (string, error) {
 	expirationTime := time.Now().Add(90 * 24 * time.Hour)
 	claims := &Claims{

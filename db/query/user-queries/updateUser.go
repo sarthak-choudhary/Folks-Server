@@ -1,4 +1,4 @@
-package query
+package user_queries
 
 import (
 	"context"
@@ -11,14 +11,14 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// UpdateUser updates the user
-func UpdateUser(u *models.User, client *mongo.Client) (models.User, error) {
+// UpdateUser updates the user-queries
+func UpdateUser(u *models.User, client *mongo.Client) (*models.User, error) {
 	var err error
 	var results models.User
 	emptyUserObject := models.User{}
 
 	if err != nil {
-		return emptyUserObject, err
+		return &emptyUserObject, err
 	}
 
 	q := bson.M{"_id": u.ID}
@@ -47,9 +47,9 @@ func UpdateUser(u *models.User, client *mongo.Client) (models.User, error) {
 	err = collection.FindOneAndUpdate(ctx, q, q2, &opt).Decode(&results)
 
 	if err != nil {
-		return emptyUserObject, err
+		return &emptyUserObject, err
 	}
 
-	return results, nil
+	return &results, nil
 }
 

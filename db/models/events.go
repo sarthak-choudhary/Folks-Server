@@ -25,5 +25,5 @@ type Event struct {
 	PicturesUrls      []string             `bson:"picturesUrls,omitempty" json:"picturesUrls,omitempty"`
 }
 
-//Events - Slice of event
+//Events - Slice of event-queries
 type Events []Event

@@ -1,4 +1,4 @@
-package query
+package user_queries
 
 import (
 	"context"
@@ -11,20 +11,29 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//RequestEvent function adds a request for a user to join a particular event
-func RequestEvent(userID primitive.ObjectID, eventID primitive.ObjectID, client *mongo.Client) (models.User, error) {
-	var results models.User
+//FollowUser - Logged in user-queries follows the user-queries with given username
+func FollowUser(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.Client) (models.User, error) {
 	var err error
-
+	var results models.User
 	emptyUserObject := models.User{}
 
 	q := bson.M{"_id": userID}
-	q2 := bson.M{"$addToSet": bson.M{"invitesSent": eventID}}
+	q2 := bson.M{"$addToSet": bson.M{"requestsReceived": id}}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
 
 	collection := client.Database("folks").Collection("users")
+	err = collection.FindOneAndUpdate(ctx, q, q2).Err()
+
+	if err != nil {
+		return emptyUserObject, err
+	}
+
+	q = bson.M{"_id": id}
+	q2 = bson.M{"$addToSet": bson.M{"requestsSent": userID}}
+
+	ctx, cancel = context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 
 	after := options.After
 	opt := options.FindOneAndUpdateOptions{
@@ -38,16 +47,6 @@ func RequestEvent(userID primitive.ObjectID, eventID primitive.ObjectID, client 
 	}
 
 	err = result.Decode(&results)
-
-	if err != nil {
-		return emptyUserObject, err
-	}
-
-	q = bson.M{"_id": eventID}
-	q2 = bson.M{"$addToSet": bson.M{"waitlist": userID}}
-
-	collection = client.Database("folks").Collection("events")
-	err = collection.FindOneAndUpdate(ctx, q, q2).Err()
 
 	if err != nil {
 		return emptyUserObject, err

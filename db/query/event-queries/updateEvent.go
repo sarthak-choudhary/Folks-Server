@@ -1,4 +1,4 @@
-package query
+package event_queries
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// UpdateEvent updates the event
+// UpdateEvent updates the event-queries
 func UpdateEvent(id primitive.ObjectID, name string, description string, destination string, locationLatitude float64, locationLongitude float64, datetime time.Time, picturesUrls []string, client *mongo.Client) (models.Event, error) {
 	var err error
 	var results models.Event

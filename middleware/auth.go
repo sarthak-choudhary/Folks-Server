@@ -3,18 +3,17 @@ package middleware
 import (
 	"context"
 	"encoding/json"
+	"github.com/wefolks/backend/db/query/user-queries"
 	"net/http"
 	"strings"
 
-	"github.com/wefolks/backend/db/models"
-	"github.com/wefolks/backend/db/query"
-
 	"github.com/dgrijalva/jwt-go"
+	"github.com/wefolks/backend/db/models"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 //Auth checks for the Authorization header, decodes
-//the token and adds the user to request context.
+//the token and adds the user-queries to request context.
 func Auth(client *mongo.Client, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		headers := r.Header
@@ -43,8 +42,8 @@ func Auth(client *mongo.Client, next http.Handler) http.Handler {
 			return
 		}
 
-		user, _ := query.GetUser(claims.Email, client)
-		key := "user"
+		user, _ := user_queries.GetUser(claims.Email, client)
+		key := "user-queries"
 		ctx := context.WithValue(r.Context(), key, user)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

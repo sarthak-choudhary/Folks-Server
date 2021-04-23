@@ -1,4 +1,4 @@
-package query
+package user_queries
 
 import (
 	"context"
@@ -6,17 +6,17 @@ import (
 	"fmt"
 	"github.com/wefolks/backend/db/models"
 	"github.com/wefolks/backend/util"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"time"
 )
 
-// changePassword: Change password for authenticated user
+// changePassword: Change password for authenticated user-queries
 // np -> New password
 // op -> Old password
 func ChangePassword(op string, np string, _id primitive.ObjectID, c *mongo.Client)	(models.User, error)	{
-	// Get user from id
+	// Get user-queries from id
 	fmt.Print("I was here")
 	stringUserID := _id.Hex()
 	user, err := GetUserByID(stringUserID, c)

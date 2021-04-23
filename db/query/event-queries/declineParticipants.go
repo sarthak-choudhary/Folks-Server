@@ -1,4 +1,4 @@
-package query
+package event_queries
 
 import (
 	"context"
@@ -11,14 +11,14 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//InviteParticipants functions allows admins to invite new participants for a particular event
-func InviteParticipants(eventID primitive.ObjectID, users []primitive.ObjectID, client *mongo.Client) (models.Event, error) {
+//DeclineParticipants allows to decline multiple requests to join a particular event-queries
+func DeclineParticipants(eventID primitive.ObjectID, users []primitive.ObjectID, client *mongo.Client) (models.Event, error) {
 	var results models.Event
 	var err error
 	emptyEventObject := models.Event{}
 
 	q := bson.M{"_id": eventID}
-	q2 := bson.M{"$addToSet": bson.M{"invitelist": bson.M{"$each": users}}}
+	q2 := bson.M{"$pull": bson.M{"waitlist": bson.M{"$each": users}}}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -45,7 +45,7 @@ func InviteParticipants(eventID primitive.ObjectID, users []primitive.ObjectID, 
 
 	for _, userID := range users {
 		q = bson.M{"_id": userID}
-		q2 = bson.M{"$addToSet": bson.M{"invitesReceived": eventID}}
+		q2 = bson.M{"$pull": bson.M{"invitesSent": eventID}}
 
 		result = collection.FindOneAndUpdate(ctx, q, q2)
 

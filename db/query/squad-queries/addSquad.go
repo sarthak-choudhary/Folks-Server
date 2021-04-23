@@ -1,4 +1,4 @@
-package query
+package squad_queries
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-//AddSquad - adds new squad to db.
+//AddSquad - adds new squad-queries to db.
 func AddSquad(name string, description string, groupImages []string, admins []primitive.ObjectID, members []primitive.ObjectID, invitesSent []primitive.ObjectID, client *mongo.Client) (models.Squad, error) {
 	var err error
 	var squad models.Squad

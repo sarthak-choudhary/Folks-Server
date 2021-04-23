@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/graphql-go/handler"
 	"github.com/wefolks/backend/api"
 	"github.com/wefolks/backend/db"
 	"github.com/wefolks/backend/gql"
 	"github.com/wefolks/backend/middleware"
 	"github.com/wefolks/backend/util"
-	"github.com/graphql-go/handler"
 )
 
 var dbConnection db.MongoDB
@@ -29,7 +29,6 @@ func main() {
 		log.Fatal("Elastic Search client can't be setup", err)
 		return
 	}
-
 	// Graphql handler setup
 	schema := gql.InitSchema(&dbConnection, elastiClient)
 	h := handler.New(&handler.Config{

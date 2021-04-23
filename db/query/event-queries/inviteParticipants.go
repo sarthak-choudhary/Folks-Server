@@ -1,7 +1,9 @@
-package query
+package event_queries
 
 import (
 	"context"
+	"errors"
+	notification_queries "github.com/wefolks/backend/db/query/notification-queries"
 	"time"
 
 	"github.com/wefolks/backend/db/models"
@@ -11,14 +13,14 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//AcceptParticipants functions adds participants to a particular event
-func AcceptParticipants(eventID primitive.ObjectID, users []primitive.ObjectID, client *mongo.Client) (models.Event, error) {
+//InviteParticipants function allows admins to invite new participants for a particular event-queries
+func InviteParticipants(eventID primitive.ObjectID, users []primitive.ObjectID, client *mongo.Client) (models.Event, error) {
 	var results models.Event
 	var err error
 	emptyEventObject := models.Event{}
 
 	q := bson.M{"_id": eventID}
-	q2 := bson.M{"$addToSet": bson.M{"participants": bson.M{"$each": users}}, "$pull": bson.M{"waitlist": bson.M{"$each": users}}}
+	q2 := bson.M{"$addToSet": bson.M{"invitelist": bson.M{"$each": users}}}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -45,7 +47,7 @@ func AcceptParticipants(eventID primitive.ObjectID, users []primitive.ObjectID, 
 
 	for _, userID := range users {
 		q = bson.M{"_id": userID}
-		q2 = bson.M{"$addToSet": bson.M{"events": eventID}, "$pull": bson.M{"invitesSent": eventID}}
+		q2 = bson.M{"$addToSet": bson.M{"invitesReceived": eventID}}
 
 		result = collection.FindOneAndUpdate(ctx, q, q2)
 
@@ -53,6 +55,13 @@ func AcceptParticipants(eventID primitive.ObjectID, users []primitive.ObjectID, 
 			return emptyEventObject, result.Err()
 		}
 	}
-
+	event, err := GetEvent(eventID.String(), client)
+	if err!=nil{
+		return models.Event{}, err
+	}
+	err, _ = notification_queries.EventInviteNotification(client, event.HostedBy, users, event)
+	if err != nil {
+		return models.Event{}, errors.New("Error: Notification could not be sent.\n"+err.Error())
+	}
 	return results, nil
 }

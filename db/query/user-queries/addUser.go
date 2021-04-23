@@ -1,17 +1,17 @@
-package query
+package user_queries
 
 import (
 	"context"
 	"fmt"
+	"github.com/olivere/elastic/v7"
 	"github.com/wefolks/backend/db/models"
 	query2 "github.com/wefolks/backend/elasticsearch/query"
-	"github.com/olivere/elastic/v7"
 	"log"
 
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// AddUser adds a new user to the database
+// AddUser adds a new user-queries to the database
 func AddUser(user *models.User, client *mongo.Client, ec *elastic.Client) (string, error) {
 	collection := client.Database("folks").Collection("users")
 	insertResult, err := collection.InsertOne(context.TODO(), user)
@@ -38,7 +38,7 @@ func AddUser(user *models.User, client *mongo.Client, ec *elastic.Client) (strin
 	//
 	//item := grpc.Item{
 	//	Id:          id,
-	//	Name:        user.FirstName + " " + user.LastName,
+	//	Name:        user-queries.FirstName + " " + user-queries.LastName,
 	//	Owner:       "",
 	//	Category:    "",
 	//	Description: "",

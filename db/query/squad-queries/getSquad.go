@@ -1,4 +1,4 @@
-package query
+package squad_queries
 
 import (
 	"context"
@@ -10,27 +10,27 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//GetEvent - fetch event by _id
-func GetEvent(_id string, client *mongo.Client) (models.Event, error) {
-	var result models.Event
+//GetSquad - fetch squad-queries by _id
+func GetSquad(_id string, client *mongo.Client) (models.Squad, error) {
+	var result models.Squad
 	var err error
-	emptyEventObject := models.Event{}
+	emptySquadObject := models.Squad{}
 
 	id, err := primitive.ObjectIDFromHex(_id)
 
 	if err != nil {
-		return emptyEventObject, err
+		return emptySquadObject, err
 	}
 
 	q := bson.M{"_id": id}
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	collection := client.Database("folks").Collection("events")
+	collection := client.Database("folks").Collection("squads")
 	err = collection.FindOne(ctx, q).Decode(&result)
 
 	if err != nil {
-		return emptyEventObject, err
+		return emptySquadObject, err
 	}
 
 	return result, nil
