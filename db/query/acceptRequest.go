@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/wefolks/backend/db/models"
@@ -12,13 +13,13 @@ import (
 )
 
 //AcceptRequest function accepts the follow request of particular user
-func AcceptRequest(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.Client) (models.User, error) {
+func AcceptRequest(acceptorId primitive.ObjectID, requesterId primitive.ObjectID, client *mongo.Client) (models.User, error) {
 	var results models.User
 	var err error
 	emptyUserObject := models.User{}
 
-	q := bson.M{"_id": id}
-	q2 := bson.M{"$pull": bson.M{"requestsReceived": userID}, "$inc": bson.M{"followedByCount": 1}}
+	q := bson.M{"_id": acceptorId}
+	q2 := bson.M{"$pull": bson.M{"requestsReceived": requesterId}, "$inc": bson.M{"followedByCount": 1}}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -42,13 +43,18 @@ func AcceptRequest(id primitive.ObjectID, userID primitive.ObjectID, client *mon
 		return emptyUserObject, err
 	}
 
-	q = bson.M{"_id": userID}
-	q2 = bson.M{"$addToSet": bson.M{"following": id}, "$pull": bson.M{"requestsSent": id}}
+	q = bson.M{"_id": requesterId}
+	q2 = bson.M{"$addToSet": bson.M{"following": acceptorId}, "$pull": bson.M{"requestsSent": acceptorId}}
 	err = collection.FindOneAndUpdate(ctx, q, q2).Err()
 
 	if err != nil {
 		return emptyUserObject, err
 	}
 
+	err, _ = FollowAcceptedNotification(client, requesterId, acceptorId)
+	if err != nil {
+		return emptyUserObject, errors.New("Error: Notification could not be sent.\n"+err.Error())
+	}
+	
 	return results, nil
 }

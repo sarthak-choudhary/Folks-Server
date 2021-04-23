@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/wefolks/backend/db/models"
@@ -50,6 +51,11 @@ func FollowUser(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.
 
 	if err != nil {
 		return emptyUserObject, err
+	}
+
+	err, _ = FollowRequestNotification(client, userID, id)
+	if err != nil {
+		return emptyUserObject, errors.New("Error: Notification could not be sent.\n"+err.Error())
 	}
 
 	return results, nil
