@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -18,8 +19,7 @@ type MongoDB struct {
 // ConnectDB connects to the database
 func ConnectDB() MongoDB {
 	// Change mongo ApplyURI -> "mongodb://localhost:27017/folks" to run locally
-	// Change mongo ApplyURI -> "mongodb+srv://folks:folks@cluster0.9up09.mongodb.net/<dbname>?retryWrites=true&w=majority" to run on mongodb atlas
-	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb+srv://folks:folks@cluster0.9up09.mongodb.net/<dbname>?retryWrites=true&w=majority"))
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(string(os.Getenv("MONGODB_URL"))))
 	if err != nil {
 		log.Fatal(err)
 	}

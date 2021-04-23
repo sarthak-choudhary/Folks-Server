@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
 	elasticsearch2 "github.com/wefolks/backend/elasticsearch"
 	"log"
 	"net/http"
@@ -19,6 +20,7 @@ var dbConnection db.MongoDB
 
 func main() {
 	// MongoDB client generation
+	godotenv.Load(".env")
 	dbConnection = db.ConnectDB()
 	defer dbConnection.CloseDB()
 	client := dbConnection.Session
@@ -51,7 +53,7 @@ func main() {
 	http.HandleFunc("/image_upload", util.Handler)
 
 	log.Printf("HTTP server started on :%s", os.Getenv("PORT_FOR_WEBAPP"))
-	addr := ":" + string(os.Getenv("PORT_FOR_WEBAPP"))
+	addr := ":" + os.Getenv("PORT_FOR_WEBAPP")
 	err = http.ListenAndServe(addr, nil)
 	if err != nil {
 		log.Fatal("Error starting server:", err)

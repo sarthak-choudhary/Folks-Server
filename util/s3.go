@@ -6,6 +6,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"path/filepath"
 
 	"gopkg.in/mgo.v2/bson"
@@ -78,8 +79,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	s, err := session.NewSession(&aws.Config{
 		Region: aws.String("ap-south-1"),
 		Credentials: credentials.NewStaticCredentials(
-			"AKIA4JUME47GK5B7FMKX",
-			"e19XAPTiy2ktiFfau3NKWVdRm716USG9Ge5z6oCF",
+			os.Getenv("S3_ID"),
+			os.Getenv("S3_SECRET"),
 			"",
 		),
 	})

@@ -9,6 +9,7 @@ require (
 	github.com/douglasmakey/go-fcm v0.0.0-20190519231340-ddb9be53f822
 	github.com/graphql-go/graphql v0.7.9
 	github.com/graphql-go/handler v0.2.3
+	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/olivere/elastic/v7 v7.0.20
 	go.mongodb.org/mongo-driver v1.4.0
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
