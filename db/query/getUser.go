@@ -1,4 +1,4 @@
-package user_queries
+package query
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-//GetUser queries the database and gets the user-queries by email.
+//GetUser queries the database and gets the user by email.
 func GetUser(email string, client *mongo.Client) (*models.User, error) {
 	var result models.User
 
@@ -27,7 +27,7 @@ func GetUser(email string, client *mongo.Client) (*models.User, error) {
 	return &result, nil
 }
 
-//GetUserByPhoneNo queries the database and gets the user-queries by phone number.
+//GetUserByPhoneNo queries the database and gets the user by phone number.
 func GetUserByPhoneNo(phoneNo string, client *mongo.Client) (*models.User, error) {
 	var result models.User
 
@@ -45,7 +45,7 @@ func GetUserByPhoneNo(phoneNo string, client *mongo.Client) (*models.User, error
 	return &result, nil
 }
 
-//GetUserByUsername queries the database and gets the user-queries by username.
+//GetUserByUsername queries the database and gets the user by username.
 func GetUserByUsername(phoneNo string, client *mongo.Client) (*models.User, error) {
 	var result models.User
 
@@ -60,7 +60,7 @@ func GetUserByUsername(phoneNo string, client *mongo.Client) (*models.User, erro
 	return &result, nil
 }
 
-//GetUserByID queries the database and gets the user-queries by ID.
+//GetUserByID queries the database and gets the user by ID.
 func GetUserByID(_id string, client *mongo.Client) (models.User, error) {
 	var result models.User
 	var err error

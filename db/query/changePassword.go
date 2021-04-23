@@ -1,4 +1,4 @@
-package user_queries
+package query
 
 import (
 	"context"
@@ -12,11 +12,11 @@ import (
 	"time"
 )
 
-// changePassword: Change password for authenticated user-queries
+// changePassword: Change password for authenticated user
 // np -> New password
 // op -> Old password
 func ChangePassword(op string, np string, _id primitive.ObjectID, c *mongo.Client)	(models.User, error)	{
-	// Get user-queries from id
+	// Get user from id
 	fmt.Print("I was here")
 	stringUserID := _id.Hex()
 	user, err := GetUserByID(stringUserID, c)

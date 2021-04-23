@@ -2,9 +2,7 @@ package gql
 
 import (
 	"errors"
-	e "github.com/wefolks/backend/db/query/event-queries"
-	s "github.com/wefolks/backend/db/query/squad-queries"
-	us "github.com/wefolks/backend/db/query/user-queries"
+	"github.com/wefolks/backend/db/query"
 	"time"
 
 	"github.com/wefolks/backend/util"
@@ -20,7 +18,7 @@ func getAllEvents(_ graphql.ResolveParams) (interface{}, error) {
 	var err error
 	var result interface{}
 
-	result, err = e.GetAllEvents(mongo.Session)
+	result, err = query.GetAllEvents(mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +29,7 @@ func getAllUsers(_ graphql.ResolveParams) (interface{}, error) {
 	var err error
 	var result interface{}
 
-	result, err = us.GetAllUsers(mongo.Session)
+	result, err = query.GetAllUsers(mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +40,7 @@ func getAllSquads(_ graphql.ResolveParams) (interface{}, error) {
 	var err error
 	var result interface{}
 
-	result, err = s.GetAllSquads(mongo.Session)
+	result, err = query.GetAllSquads(mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +56,7 @@ func getEvent(p graphql.ResolveParams) (interface{}, error) {
 		id = p.Args["_id"].(string)
 	}
 
-	result, err = e.GetEvent(id, mongo.Session)
+	result, err = query.GetEvent(id, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +72,7 @@ func getUser(p graphql.ResolveParams) (interface{}, error) {
 		id = p.Args["_id"].(string)
 	}
 
-	result, err = us.GetUserByID(id, mongo.Session)
+	result, err = query.GetUserByID(id, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +89,7 @@ func getSquad(p graphql.ResolveParams) (interface{}, error) {
 		id = p.Args["_id"].(string)
 	}
 
-	result, err = s.GetSquad(id, mongo.Session)
+	result, err = query.GetSquad(id, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +108,7 @@ func addEvent(p graphql.ResolveParams) (interface{}, error) {
 	var picturesUrls []string
 	var admins []primitive.ObjectID
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 	hostedBy := user.ID
 	owner := user.FirstName + " " + user.LastName
 
@@ -157,7 +155,7 @@ func addEvent(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	admins = append(admins, hostedBy)
-	result, err = e.AddEvent(name, description, destination, locationLatitude, locationLongitude, t, hostedBy, inviteList, picturesUrls, admins, owner, mongo.Session, elasti)
+	result, err = query.AddEvent(name, description, destination, locationLatitude, locationLongitude, t, hostedBy, inviteList, picturesUrls, admins, owner, mongo.Session, elasti)
 	if err != nil {
 		return nil, err
 	}
@@ -173,7 +171,7 @@ func addSquad(p graphql.ResolveParams) (interface{}, error) {
 	var members []primitive.ObjectID
 	var invitesSent []primitive.ObjectID
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 
 	admins = append(admins, user.ID)
 
@@ -189,7 +187,7 @@ func addSquad(p graphql.ResolveParams) (interface{}, error) {
 		groupImages = p.Args["groupImages"].([]string)
 	}
 
-	result, err = s.AddSquad(name, description, groupImages, admins, members, invitesSent, mongo.Session)
+	result, err = query.AddSquad(name, description, groupImages, admins, members, invitesSent, mongo.Session)
 
 	if err != nil {
 		return nil, err
@@ -207,12 +205,12 @@ func updateEvent(p graphql.ResolveParams) (interface{}, error) {
 	var t time.Time
 	var picturesUrls []string
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 	id := p.Args["id"].(string)
 
-	event, err := e.GetEvent(id, mongo.Session)
+	event, err := query.GetEvent(id, mongo.Session)
 	if event.HostedBy != user.ID {
-		err = errors.New("event-queries can be updated by its owner only")
+		err = errors.New("event can be updated by its owner only")
 		return nil, err
 	}
 
@@ -264,7 +262,7 @@ func updateEvent(p graphql.ResolveParams) (interface{}, error) {
 		}
 	}
 
-	result, err = e.UpdateEvent(event.ID, name, description, destination, locationLatitude, locationLongitude, t, picturesUrls, mongo.Session)
+	result, err = query.UpdateEvent(event.ID, name, description, destination, locationLatitude, locationLongitude, t, picturesUrls, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -275,7 +273,7 @@ func followUser(p graphql.ResolveParams) (interface{}, error) {
 	var err error
 	var user_id string
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 	id := user.ID
 
 	if p.Args["id"] != nil {
@@ -298,11 +296,11 @@ func followUser(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	if following == true {
-		err = errors.New("user-queries is already following this account")
+		err = errors.New("user is already following this account")
 		return nil, err
 	}
 
-	result, err := us.FollowUser(id, userID, mongo.Session)
+	result, err := query.FollowUser(id, userID, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -313,7 +311,7 @@ func acceptRequest(p graphql.ResolveParams) (interface{}, error) {
 	var err error
 	var user_id string
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 	id := user.ID
 	if p.Args["id"] != nil {
 		user_id = p.Args["id"].(string)
@@ -336,11 +334,11 @@ func acceptRequest(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	if requested != true {
-		err = errors.New("user-queries doesn't has such follow request")
+		err = errors.New("user doesn't has such follow request")
 		return nil, err
 	}
 
-	result, err := us.AcceptRequest(id, userID, mongo.Session)
+	result, err := query.AcceptRequest(id, userID, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -352,7 +350,7 @@ func declineRequest(p graphql.ResolveParams) (interface{}, error) {
 	var err error
 	var user_id string
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 	id := user.ID
 	if p.Args["id"] != nil {
 		user_id = p.Args["id"].(string)
@@ -375,11 +373,11 @@ func declineRequest(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	if requested != true {
-		err = errors.New("user-queries doesn't has such follow request")
+		err = errors.New("user doesn't has such follow request")
 		return nil, err
 	}
 
-	result, err := us.DeclineRequest(id, userID, mongo.Session)
+	result, err := query.DeclineRequest(id, userID, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -391,19 +389,19 @@ func requestEvent(p graphql.ResolveParams) (interface{}, error) {
 	var err error
 	var event_id string
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 	id := user.ID
 
 	if p.Args["id"] != nil {
 		event_id = p.Args["id"].(string)
 	}
 
-	event, err := e.GetEvent(event_id, mongo.Session)
+	event, err := query.GetEvent(event_id, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
 
-	result, err := e.RequestEvent(id, event.ID, mongo.Session)
+	result, err := query.RequestEvent(id, event.ID, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -417,7 +415,7 @@ func acceptParticipants(p graphql.ResolveParams) (interface{}, error) {
 	var users []interface{}
 	var users_id []primitive.ObjectID
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 
 	if p.Args["userID"] != nil {
 		users = p.Args["userID"].([]interface{})
@@ -427,7 +425,7 @@ func acceptParticipants(p graphql.ResolveParams) (interface{}, error) {
 		event_id = p.Args["eventID"].(string)
 	}
 
-	event, err := e.GetEvent(event_id, mongo.Session)
+	event, err := query.GetEvent(event_id, mongo.Session)
 
 	isAdmin := false
 	for _, obj := range event.Admins {
@@ -450,7 +448,7 @@ func acceptParticipants(p graphql.ResolveParams) (interface{}, error) {
 		}
 	}
 
-	result, err := e.AcceptParticipants(event.ID, users_id, mongo.Session)
+	result, err := query.AcceptParticipants(event.ID, users_id, mongo.Session)
 
 	if err != nil {
 		return nil, err
@@ -465,7 +463,7 @@ func declineParticipants(p graphql.ResolveParams) (interface{}, error) {
 	var users []interface{}
 	var users_id []primitive.ObjectID
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 
 	if p.Args["userID"] != nil {
 		users = p.Args["userID"].([]interface{})
@@ -475,7 +473,7 @@ func declineParticipants(p graphql.ResolveParams) (interface{}, error) {
 		event_id = p.Args["eventID"].(string)
 	}
 
-	event, err := e.GetEvent(event_id, mongo.Session)
+	event, err := query.GetEvent(event_id, mongo.Session)
 
 	isAdmin := false
 	for _, obj := range event.Admins {
@@ -498,7 +496,7 @@ func declineParticipants(p graphql.ResolveParams) (interface{}, error) {
 		}
 	}
 
-	result, err := e.DeclineParticipants(event.ID, users_id, mongo.Session)
+	result, err := query.DeclineParticipants(event.ID, users_id, mongo.Session)
 
 	if err != nil {
 		return nil, err
@@ -513,7 +511,7 @@ func inviteParticipants(p graphql.ResolveParams) (interface{}, error) {
 	var users []interface{}
 	var users_id []primitive.ObjectID
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 
 	if p.Args["userID"] != nil {
 		users = p.Args["userID"].([]interface{})
@@ -523,7 +521,7 @@ func inviteParticipants(p graphql.ResolveParams) (interface{}, error) {
 		event_id = p.Args["eventID"].(string)
 	}
 
-	event, err := e.GetEvent(event_id, mongo.Session)
+	event, err := query.GetEvent(event_id, mongo.Session)
 
 	isAdmin := false
 	for _, obj := range event.Admins {
@@ -546,7 +544,7 @@ func inviteParticipants(p graphql.ResolveParams) (interface{}, error) {
 		}
 	}
 
-	result, err := e.InviteParticipants(event.ID, users_id, mongo.Session)
+	result, err := query.InviteParticipants(event.ID, users_id, mongo.Session)
 
 	if err != nil {
 		return nil, err
@@ -561,7 +559,7 @@ func assignAdmin(p graphql.ResolveParams) (interface{}, error) {
 	var admins []interface{}
 	var admins_id []primitive.ObjectID
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 
 	if p.Args["admins"] != nil {
 		admins = p.Args["admins"].([]interface{})
@@ -571,7 +569,7 @@ func assignAdmin(p graphql.ResolveParams) (interface{}, error) {
 		event_id = p.Args["eventID"].(string)
 	}
 
-	event, err := e.GetEvent(event_id, mongo.Session)
+	event, err := query.GetEvent(event_id, mongo.Session)
 
 	if err != nil {
 		return nil, err
@@ -598,7 +596,7 @@ func assignAdmin(p graphql.ResolveParams) (interface{}, error) {
 		}
 	}
 
-	result, err := e.AssignAdmin(event.ID, admins_id, mongo.Session)
+	result, err := query.AssignAdmin(event.ID, admins_id, mongo.Session)
 
 	if err != nil {
 		return nil, err
@@ -611,7 +609,7 @@ func acceptInvite(p graphql.ResolveParams) (interface{}, error) {
 	var err error
 	var event_id string
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 	id := user.ID
 
 	if p.Args["eventID"] != nil {
@@ -634,11 +632,11 @@ func acceptInvite(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	if invited != true {
-		err = errors.New("user-queries doesn't has such invite")
+		err = errors.New("user doesn't has such invite")
 		return nil, err
 	}
 
-	result, err := e.AcceptInvite(id, eventID, mongo.Session)
+	result, err := query.AcceptInvite(id, eventID, mongo.Session)
 
 	if err != nil {
 		return nil, err
@@ -651,7 +649,7 @@ func declineInvite(p graphql.ResolveParams) (interface{}, error) {
 	var err error
 	var event_id string
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 	id := user.ID
 
 	if p.Args["eventID"] != nil {
@@ -674,11 +672,11 @@ func declineInvite(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	if invited != true {
-		err = errors.New("user-queries doesn't has such invite")
+		err = errors.New("user doesn't has such invite")
 		return nil, err
 	}
 
-	result, err := e.DeclineInvite(id, eventID, mongo.Session)
+	result, err := query.DeclineInvite(id, eventID, mongo.Session)
 
 	if err != nil {
 		return nil, err
@@ -689,7 +687,7 @@ func declineInvite(p graphql.ResolveParams) (interface{}, error) {
 
 func myProfile(p graphql.ResolveParams) (interface{}, error) {
 
-	user := p.Context.Value("user-queries").(*models.User)
+	user := p.Context.Value("user").(*models.User)
 	return user, nil
 }
 
@@ -728,14 +726,14 @@ func getNearByEventsWithImages(rp graphql.ResolveParams) (interface{}, error) {
 func changePassword(rp graphql.ResolveParams) (interface{}, error)	{
 	var newPassword string
 	var oldPassword string
-	user := rp.Context.Value("user-queries").(*models.User)
+	user := rp.Context.Value("user").(*models.User)
 	id := user.ID
 
 	if rp.Args["newPassword"] != nil && rp.Args["oldPassword"] != nil {
 		newPassword = rp.Args["newPassword"].(string)
 		oldPassword = rp.Args["oldPassword"].(string)
 	}
-	result, err := us.ChangePassword(oldPassword, newPassword, id, mongo.Session)
+	result, err := query.ChangePassword(oldPassword, newPassword, id, mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -743,10 +741,10 @@ func changePassword(rp graphql.ResolveParams) (interface{}, error)	{
 }
 
 func getUpcommingEvents(rp graphql.ResolveParams) (interface{}, error)	{
-	user := rp.Context.Value("user-queries").(*models.User)
+	user := rp.Context.Value("user").(*models.User)
 	id := user.ID
 
-	result, err := e.GetUpcommingEvents(id.String(), mongo.Session)
+	result, err := query.GetUpcommingEvents(id.String(), mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -754,10 +752,10 @@ func getUpcommingEvents(rp graphql.ResolveParams) (interface{}, error)	{
 }
 
 func getPastEvents(rp graphql.ResolveParams) (interface{}, error)	{
-	user := rp.Context.Value("user-queries").(*models.User)
+	user := rp.Context.Value("user").(*models.User)
 	id := user.ID
 
-	result, err := e.GetPastEvents(id.String(), mongo.Session)
+	result, err := query.GetPastEvents(id.String(), mongo.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -766,13 +764,13 @@ func getPastEvents(rp graphql.ResolveParams) (interface{}, error)	{
 
 func updateUser(rp graphql.ResolveParams) (interface{}, error)	{
 	var result *models.User
-	user := rp.Context.Value("user-queries").(*models.User)
+	user := rp.Context.Value("user").(*models.User)
 
 	if rp.Args["username"] != nil {
 		if rp.Args["username"] == ""	{
 			return nil, errors.New("Username cant be an empty string.")
 		}
-		_, err := us.GetUserByUsername(rp.Args["username"].(string), mongo.Session)
+		_, err := query.GetUserByUsername(rp.Args["username"].(string), mongo.Session)
 		if err == nil {
 			return nil, errors.New("Username already exists. Please provide a unique username.")
 		}
@@ -782,7 +780,7 @@ func updateUser(rp graphql.ResolveParams) (interface{}, error)	{
 		if rp.Args["phoneNo"] == ""	{
 			return nil, errors.New("Empty string cant be a phone number.")
 		}
-		_, err := us.GetUserByPhoneNo(rp.Args["phoneNo"].(string), mongo.Session)
+		_, err := query.GetUserByPhoneNo(rp.Args["phoneNo"].(string), mongo.Session)
 		if err == nil {
 			//fmt.Println(u.PhoneNo)
 			return nil, errors.New("Phone number already exists. Please provide a unique phone number.")
@@ -799,7 +797,7 @@ func updateUser(rp graphql.ResolveParams) (interface{}, error)	{
 		user.IsPublic = rp.Args["isPublic"].(bool)
 	}
 
-	result, err := us.UpdateUser(user, mongo.Session)
+	result, err := query.UpdateUser(user, mongo.Session)
 	if err != nil {
 		return nil, err
 	}

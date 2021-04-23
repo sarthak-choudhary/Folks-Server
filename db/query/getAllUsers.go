@@ -1,4 +1,4 @@
-package user_queries
+package query
 
 import (
 	"context"

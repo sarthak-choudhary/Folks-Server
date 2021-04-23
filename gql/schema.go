@@ -4,8 +4,8 @@ import (
 	"github.com/olivere/elastic/v7"
 	"log"
 
-	"github.com/wefolks/backend/db"
 	"github.com/graphql-go/graphql"
+	"github.com/wefolks/backend/db"
 )
 
 var mongo *db.MongoDB

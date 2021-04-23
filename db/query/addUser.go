@@ -1,4 +1,4 @@
-package user_queries
+package query
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// AddUser adds a new user-queries to the database
+// AddUser adds a new user to the database
 func AddUser(user *models.User, client *mongo.Client, ec *elastic.Client) (string, error) {
 	collection := client.Database("folks").Collection("users")
 	insertResult, err := collection.InsertOne(context.TODO(), user)
@@ -38,7 +38,7 @@ func AddUser(user *models.User, client *mongo.Client, ec *elastic.Client) (strin
 	//
 	//item := grpc.Item{
 	//	Id:          id,
-	//	Name:        user-queries.FirstName + " " + user-queries.LastName,
+	//	Name:        user.FirstName + " " + user.LastName,
 	//	Owner:       "",
 	//	Category:    "",
 	//	Description: "",

@@ -1,43 +1,44 @@
-package event_queries
+package query
 
 import (
 	"context"
 	"time"
 
 	"github.com/wefolks/backend/db/models"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-//GetAllEvents - fetches all events from db.
-func GetAllEvents(client *mongo.Client) (models.Events, error) {
-	var result models.Events
+//GetAllSquads - fetches all squads feom db.
+func GetAllSquads(client *mongo.Client) (models.Squads, error) {
+	var result models.Squads
 	var err error
-	emptyEventsObject := models.Events{}
+	emptySquadsObject := models.Squads{}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	collection := client.Database("folks").Collection("events")
+	collection := client.Database("folks").Collection("squads")
 	cur, err := collection.Find(ctx, bson.D{}, options.Find())
 
 	if err != nil {
-		return emptyEventsObject, err
+		return emptySquadsObject, err
 	}
 
 	for cur.Next(ctx) {
-		var event models.Event
-		err = cur.Decode(&event)
+		var squad models.Squad
+		err = cur.Decode(&squad)
+
 		if err != nil {
-			return nil, err
+			return emptySquadsObject, err
 		}
-		result = append(result, event)
+
+		result = append(result, squad)
 	}
 
 	if err = cur.Err(); err != nil {
-		return emptyEventsObject, err
+		return emptySquadsObject, err
 	}
 
 	cur.Close(ctx)

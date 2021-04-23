@@ -1,4 +1,4 @@
-package user_queries
+package query
 
 import (
 	"context"
@@ -11,20 +11,19 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//DeclineRequest function declines the follow request of particular user-queries.
-func DeclineRequest(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.Client) (models.User, error) {
+//DeclineInvite allows user to decline the invite for a particular event
+func DeclineInvite(id primitive.ObjectID, eventID primitive.ObjectID, client *mongo.Client) (models.User, error) {
 	var results models.User
 	var err error
 	emptyUserObject := models.User{}
 
 	q := bson.M{"_id": id}
-	q2 := bson.M{"$pull": bson.M{"requestsReceived": userID}}
+	q2 := bson.M{"$pull": bson.M{"invitesReceived": eventID}}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	collection := client.Database("folks").Collection("users")
-
 	after := options.After
 	opt := options.FindOneAndUpdateOptions{
 		ReturnDocument: &after,
@@ -42,8 +41,10 @@ func DeclineRequest(id primitive.ObjectID, userID primitive.ObjectID, client *mo
 		return emptyUserObject, err
 	}
 
-	q = bson.M{"_id": userID}
-	q2 = bson.M{"$pull": bson.M{"requestsSent": id}}
+	collection = client.Database("folks").Collection("events")
+	q = bson.M{"_id": eventID}
+	q2 = bson.M{"$pull": bson.M{"invitelist": id}}
+
 	err = collection.FindOneAndUpdate(ctx, q, q2).Err()
 
 	if err != nil {

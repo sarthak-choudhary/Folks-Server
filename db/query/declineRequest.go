@@ -1,4 +1,4 @@
-package event_queries
+package query
 
 import (
 	"context"
@@ -11,19 +11,20 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//AcceptInvite allows the user-queries to accept the invite for a particular event-queries
-func AcceptInvite(id primitive.ObjectID, eventID primitive.ObjectID, client *mongo.Client) (models.User, error) {
+//DeclineRequest function declines the follow request of particular user.
+func DeclineRequest(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.Client) (models.User, error) {
 	var results models.User
 	var err error
 	emptyUserObject := models.User{}
 
 	q := bson.M{"_id": id}
-	q2 := bson.M{"$pull": bson.M{"invitesReceived": eventID}, "$addToSet": bson.M{"events": eventID}}
+	q2 := bson.M{"$pull": bson.M{"requestsReceived": userID}}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	collection := client.Database("folks").Collection("users")
+
 	after := options.After
 	opt := options.FindOneAndUpdateOptions{
 		ReturnDocument: &after,
@@ -41,10 +42,8 @@ func AcceptInvite(id primitive.ObjectID, eventID primitive.ObjectID, client *mon
 		return emptyUserObject, err
 	}
 
-	collection = client.Database("folks").Collection("events")
-	q = bson.M{"_id": eventID}
-	q2 = bson.M{"$addToSet": bson.M{"participants": id}, "$pull": bson.M{"invitelist": id}}
-
+	q = bson.M{"_id": userID}
+	q2 = bson.M{"$pull": bson.M{"requestsSent": id}}
 	err = collection.FindOneAndUpdate(ctx, q, q2).Err()
 
 	if err != nil {

@@ -1,4 +1,4 @@
-package event_queries
+package query
 
 import (
 	"context"
@@ -11,14 +11,14 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//AcceptParticipants functions adds participants to a particular event-queries
-func AcceptParticipants(eventID primitive.ObjectID, users []primitive.ObjectID, client *mongo.Client) (models.Event, error) {
+//AssignAdmin function allows an admin to give admin status to other users also.
+func AssignAdmin(eventID primitive.ObjectID, admin_id []primitive.ObjectID, client *mongo.Client) (models.Event, error) {
 	var results models.Event
 	var err error
 	emptyEventObject := models.Event{}
 
 	q := bson.M{"_id": eventID}
-	q2 := bson.M{"$addToSet": bson.M{"participants": bson.M{"$each": users}}, "$pull": bson.M{"waitlist": bson.M{"$each": users}}}
+	q2 := bson.M{"$addToSet": bson.M{"admins": bson.M{"$each": admin_id}}}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -39,19 +39,6 @@ func AcceptParticipants(eventID primitive.ObjectID, users []primitive.ObjectID, 
 
 	if err != nil {
 		return emptyEventObject, err
-	}
-
-	collection = client.Database("folks").Collection("users")
-
-	for _, userID := range users {
-		q = bson.M{"_id": userID}
-		q2 = bson.M{"$addToSet": bson.M{"events": eventID}, "$pull": bson.M{"invitesSent": eventID}}
-
-		result = collection.FindOneAndUpdate(ctx, q, q2)
-
-		if result.Err() != nil {
-			return emptyEventObject, result.Err()
-		}
 	}
 
 	return results, nil

@@ -36,7 +36,6 @@ func main() {
 		Pretty:   true,
 		GraphiQL: true,
 	})
-
 	// Test case for gcp load balancer
 	http.Handle("/test", middleware.LogReq(http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(rw, "API Live")

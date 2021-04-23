@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	query2 "github.com/wefolks/backend/elasticsearch/query"
+	q "github.com/wefolks/backend/elasticsearch/query"
 	"net/http"
 	"time"
 
@@ -47,7 +47,7 @@ func GetData(esclient *elastic.Client) http.Handler {
 
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
-		result, err := query2.Data(ctx, esclient, body.Name, body.Category)
+		result, err := q.Data(ctx, esclient, body.Name, body.Category)
 
 		if err != nil {
 			fmt.Println(err)

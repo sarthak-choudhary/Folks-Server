@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"github.com/olivere/elastic/v7"
-	"github.com/wefolks/backend/db/query/user-queries"
+	"github.com/wefolks/backend/db/query"
 	"log"
 	"net/http"
 
@@ -16,7 +16,7 @@ import (
 	"google.golang.org/api/oauth2/v1"
 )
 
-// SignUp endpoint to add user-queries to the database
+// SignUp endpoint to add user to the database
 func SignUp(client *mongo.Client, ec *elastic.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var user models.User
@@ -32,7 +32,7 @@ func SignUp(client *mongo.Client, ec *elastic.Client) http.Handler {
 			return
 		}
 
-		_, err = user.GetUser(user.Email, client)
+		_, err = query.GetUser(user.Email, client)
 
 		if err == nil {
 			w.Header().Set("Content-Type", "application/json")
@@ -40,13 +40,13 @@ func SignUp(client *mongo.Client, ec *elastic.Client) http.Handler {
 
 			payload := struct {
 				Error string `json:"error"`
-			}{Error: "user-queries with this email already exists"}
+			}{Error: "user with this email already exists"}
 
 			json.NewEncoder(w).Encode(payload)
 			return
 		}
 
-		_, err = user.GetUserByPhoneNo(user.PhoneNo, client)
+		_, err = query.GetUserByPhoneNo(user.PhoneNo, client)
 
 		if err == nil {
 			w.Header().Set("Content-Type", "application/json")
@@ -54,13 +54,13 @@ func SignUp(client *mongo.Client, ec *elastic.Client) http.Handler {
 
 			payload := struct {
 				Error string `json:"error"`
-			}{Error: "user-queries with this phone number already exists"}
+			}{Error: "user with this phone number already exists"}
 
 			json.NewEncoder(w).Encode(payload)
 			return
 		}
 
-		_, err = user.GetUserByUsername(user.Username, client)
+		_, err = query.GetUserByUsername(user.Username, client)
 
 		if err == nil {
 			w.Header().Set("Content-Type", "application/json")
@@ -68,7 +68,7 @@ func SignUp(client *mongo.Client, ec *elastic.Client) http.Handler {
 
 			payload := struct {
 				Error string `json:"error"`
-			}{Error: "user-queries with this username already exists"}
+			}{Error: "user with this username already exists"}
 
 			json.NewEncoder(w).Encode(payload)
 			return
@@ -78,7 +78,7 @@ func SignUp(client *mongo.Client, ec *elastic.Client) http.Handler {
 		user.IsComplete = true
 		user.IsPublic	=	false
 
-		_id, err := user.AddUser(&user, client, ec)
+		_id, err := query.AddUser(&user, client, ec)
 
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -127,7 +127,7 @@ func SignUp(client *mongo.Client, ec *elastic.Client) http.Handler {
 	})
 }
 
-// Login endpoint to check user-queries in the database
+// Login endpoint to check user in the database
 func Login(client *mongo.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var data struct {
@@ -142,7 +142,7 @@ func Login(client *mongo.Client) http.Handler {
 			return
 		}
 
-		user, err := user_queries.GetUser(data.Email, client)
+		user, err := query.GetUser(data.Email, client)
 		user.FcmToken = append(user.FcmToken, data.FcmToken)
 		if err != nil {
 			w.Header().Set("Content-Type", "application/json")
@@ -173,7 +173,7 @@ func Login(client *mongo.Client) http.Handler {
 			return
 		}
 
-		user, err = user.UpdateUser(user, client)
+		user, err = query.UpdateUser(user, client)
 
 		payload := struct {
 			ID        primitive.ObjectID   `json:"_id,omitempty" bson:"_id,omitempty"`
@@ -267,7 +267,7 @@ func GoogleOauth(client *mongo.Client, ec *elastic.Client) http.Handler {
 		var jwtToken string
 		var _id primitive.ObjectID
 
-		user, err = user.GetUser(tokenInfo.Email, client)
+		user, err = query.GetUser(tokenInfo.Email, client)
 
 		if err != nil	{
 			w.WriteHeader(http.StatusInternalServerError)
@@ -276,7 +276,7 @@ func GoogleOauth(client *mongo.Client, ec *elastic.Client) http.Handler {
 
 		if user != nil {
 			user.FcmToken = append(user.FcmToken, data.FcmToken)
-			user, err = user.UpdateUser(user, client)
+			user, err = query.UpdateUser(user, client)
 			_id = user.ID
 			jwtToken, err = user.GenerateJWT()
 
@@ -315,7 +315,7 @@ func GoogleOauth(client *mongo.Client, ec *elastic.Client) http.Handler {
 			newUser.LastName = tokenInfo.FamilyName
 			newUser.IsComplete = false
 			newUser.FcmToken = append(newUser.FcmToken, data.FcmToken)
-			_id, err := user.AddUser(&newUser, client, ec)
+			_id, err := query.AddUser(&newUser, client, ec)
 
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
@@ -354,10 +354,10 @@ func GoogleOauth(client *mongo.Client, ec *elastic.Client) http.Handler {
 	})
 }
 
-//Myprofile function gives you the profile of logged in user-queries
+//Myprofile function gives you the profile of logged in user
 func Myprofile() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user := r.Context().Value("user-queries").(*models.User)
+		user := r.Context().Value("user").(*models.User)
 
 		payload := struct {
 			ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`

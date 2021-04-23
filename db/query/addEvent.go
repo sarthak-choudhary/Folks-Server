@@ -1,4 +1,4 @@
-package event_queries
+package query
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-//AddEvent - adds new event-queries to db.
+//AddEvent - adds new event to db.
 func AddEvent(name string, description string, destination string, locationLatitude float64, locationLongitude float64, datetime time.Time, hostedBy primitive.ObjectID, inviteList []primitive.ObjectID, picturesUrls []string, admins []primitive.ObjectID, owner string, client *mongo.Client, ec *elastic.Client) (models.Event, error) {
 	var err error
 	var event models.Event
@@ -46,7 +46,7 @@ func AddEvent(name string, description string, destination string, locationLatit
 	//if err != nil {
 	//	fmt.Print("Connection not established\n")
 	//	log.Fatalf("Object could not be added in elasticsearch Database\n")
-	//	return event-queries, err
+	//	return event, err
 	//}
 	//
 	//defer conn.Close()
@@ -54,10 +54,10 @@ func AddEvent(name string, description string, destination string, locationLatit
 	//c := grpc.NewSearchServiceClient(conn)
 	//
 	//item := grpc.Item{
-	//	Id:          event-queries.ID.Hex(),
-	//	Name:        event-queries.Name,
+	//	Id:          event.ID.Hex(),
+	//	Name:        event.Name,
 	//	Owner:       owner,
-	//	Description: event-queries.Description,
+	//	Description: event.Description,
 	//	Type:        1,
 	//}
 	//
@@ -66,7 +66,7 @@ func AddEvent(name string, description string, destination string, locationLatit
 	//if err != nil {
 	//	fmt.Print("This is the problem\n")
 	//	log.Fatalf("Object could not be added in elasticsearch Database\n")
-	//	return event-queries, err
+	//	return event, err
 	//
 	err = query2.InsertData(ctx, ec, event.Name, event.ID.Hex(), strconv.FormatInt(event.Category, 10),owner, event.Description, 1)
 	if err != nil{

@@ -1,4 +1,4 @@
-package user_queries
+package query
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// UpdateUser updates the user-queries
+// UpdateUser updates the user
 func UpdateUser(u *models.User, client *mongo.Client) (*models.User, error) {
 	var err error
 	var results models.User

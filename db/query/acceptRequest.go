@@ -1,4 +1,4 @@
-package event_queries
+package query
 
 import (
 	"context"
@@ -11,15 +11,14 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//RequestEvent function adds a request for a user-queries to join a particular event-queries
-func RequestEvent(userID primitive.ObjectID, eventID primitive.ObjectID, client *mongo.Client) (models.User, error) {
+//AcceptRequest function accepts the follow request of particular user
+func AcceptRequest(id primitive.ObjectID, userID primitive.ObjectID, client *mongo.Client) (models.User, error) {
 	var results models.User
 	var err error
-
 	emptyUserObject := models.User{}
 
-	q := bson.M{"_id": userID}
-	q2 := bson.M{"$addToSet": bson.M{"invitesSent": eventID}}
+	q := bson.M{"_id": id}
+	q2 := bson.M{"$pull": bson.M{"requestsReceived": userID}, "$inc": bson.M{"followedByCount": 1}}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -43,10 +42,8 @@ func RequestEvent(userID primitive.ObjectID, eventID primitive.ObjectID, client 
 		return emptyUserObject, err
 	}
 
-	q = bson.M{"_id": eventID}
-	q2 = bson.M{"$addToSet": bson.M{"waitlist": userID}}
-
-	collection = client.Database("folks").Collection("events")
+	q = bson.M{"_id": userID}
+	q2 = bson.M{"$addToSet": bson.M{"following": id}, "$pull": bson.M{"requestsSent": id}}
 	err = collection.FindOneAndUpdate(ctx, q, q2).Err()
 
 	if err != nil {

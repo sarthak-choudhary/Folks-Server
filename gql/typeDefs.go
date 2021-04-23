@@ -52,7 +52,7 @@ var ID = graphql.NewScalar(graphql.ScalarConfig{
 
 //UserType scalar added
 var UserType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "user-queries",
+	Name: "user",
 	Fields: graphql.Fields{
 		"_id": &graphql.Field{
 			Type: ID,
@@ -125,7 +125,7 @@ var UserType = graphql.NewObject(graphql.ObjectConfig{
 
 //EventType scalar added
 var EventType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "event-queries",
+	Name: "event",
 	Fields: graphql.Fields{
 		"_id": &graphql.Field{
 			Type: ID,
@@ -177,7 +177,7 @@ var EventType = graphql.NewObject(graphql.ObjectConfig{
 
 //SquadType scalar added
 var SquadType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "squad-queries",
+	Name: "squad",
 	Fields: graphql.Fields{
 		"_id": &graphql.Field{
 			Type: ID,

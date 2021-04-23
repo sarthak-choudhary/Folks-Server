@@ -1,4 +1,4 @@
-package notification_queries
+package query
 
 import (
 	"context"
@@ -9,16 +9,13 @@ import (
 	"time"
 )
 
-func EventJoinNotification(client *mongo.Client, senderId primitive.ObjectID, receiverId []primitive.ObjectID, event models.Event) (error, models.Notification) {
+func FollowRequestNotification(client *mongo.Client, receiverId primitive.ObjectID, senderId primitive.ObjectID) (error, models.Notification){
 	var notif models.Notification
-	notif.ID = primitive.NewObjectID()
-	notif.Receiver	=	receiverId
-	notif.Sender	=	senderId
-	notif.Event		=	event.ID
-	notif.Code		=	2
-
-	err, newNotif := notif.SendNotification(client)
-	if err != nil {
+	notif.Code = 3
+	notif.Sender = senderId
+	notif.Receiver = append(notif.Receiver, receiverId)
+	err, newNotif := SendNotification(notif, client)
+	if err != nil	{
 		return err, models.Notification{}
 	}
 	if newNotif.ID == primitive.NilObjectID && newNotif.Code == 0 && newNotif.Sender == primitive.NewObjectID() && newNotif.Event == primitive.NewObjectID() && len(newNotif.Receiver) == 0 {
@@ -27,7 +24,7 @@ func EventJoinNotification(client *mongo.Client, senderId primitive.ObjectID, re
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	collection := client.Database("folks").Collection("notification-queries")
+	collection := client.Database("folks").Collection("notification")
 	_, err = collection.InsertOne(ctx, newNotif)
 	if err != nil {
 		return err, models.Notification{}

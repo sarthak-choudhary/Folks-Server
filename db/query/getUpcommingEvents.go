@@ -1,4 +1,4 @@
-package event_queries
+package query
 
 import (
 	"context"

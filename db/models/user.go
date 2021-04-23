@@ -42,7 +42,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-//GenerateJWT generates a jwt for a user-queries
+//GenerateJWT generates a jwt for a user
 func (u User) GenerateJWT() (string, error) {
 	expirationTime := time.Now().Add(90 * 24 * time.Hour)
 	claims := &Claims{
