@@ -27,7 +27,8 @@ Example :
     "email" : "testuser@xyz.com",
     "password" : "password@123",
     "phoneNo" : "93152XXXXX",
-    "ineterests" : ["sleeping", "sleeping"]
+    "interests" : ["sleeping", "sleeping"],
+    "fcmToken" : ["fcm-token"]
 }
 ```
 
@@ -62,7 +63,8 @@ Example:
 ```
 {
     "email" : "testuser@xyz.com",
-    "password" : "password@123"
+    "password" : "password@123",
+    "fcmToken" : "fcm-token",
 }
 ```
 
@@ -91,7 +93,8 @@ The body should contain the id token from google oauth playground.
 Example: 
 ```
 {
-    "id_token" : "this sholud be replaced by a valid id token received from google oauth playground before it expires"
+    "id_token" : "this sholud be replaced by a valid id token received from google oauth playground before it expires",
+    "fcmToken" : "fcm-token-value"
 }
 ```
 Response of this will same as signup and login view, if the user is new to the database it will create a new user otherwise will fetch the existing user.
