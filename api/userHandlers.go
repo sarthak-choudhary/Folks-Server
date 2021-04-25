@@ -77,7 +77,7 @@ func SignUp(client *mongo.Client, ec *elastic.Client) http.Handler {
 		user.Password, _ = util.HashPassword(user.Password)
 		user.IsComplete = true
 		user.IsPublic	=	false
-
+		user.ProfilePicture	=	""
 		_id, err := query.AddUser(&user, client, ec)
 
 		if err != nil {
@@ -93,31 +93,33 @@ func SignUp(client *mongo.Client, ec *elastic.Client) http.Handler {
 		}
 
 		payload := struct {
-			ID        	string   		`json:"_id,omitempty" bson:"_id,omitempty"`
-			FirstName 	string   		`json:"firstName"`
-			LastName  	string   		`json:"lastName"`
-			Email     	string   		`json:"email"`
-			PhoneNo   	string   		`json:"phoneNo"`
-			Bio       	string   		`json:"bio"`
-			Gender    	int64    		`json:"gender"`
-			Age		  	int64    		`json:"age"`
-			Interests 	[]string 		`json:"interests"`
-			Token     	string   		`json:"token"`
-			Username  	string   		`json:"username"`
-			FcmToken	[]string		`json:"fcmToken"`
+			ID        		string   		`json:"_id,omitempty" bson:"_id,omitempty"`
+			FirstName 		string   		`json:"firstName"`
+			LastName  		string   		`json:"lastName"`
+			Email     		string   		`json:"email"`
+			PhoneNo   		string   		`json:"phoneNo"`
+			Bio       		string   		`json:"bio"`
+			Gender    		int64    		`json:"gender"`
+			Age		  		int64    		`json:"age"`
+			Interests 		[]string 		`json:"interests"`
+			Token     		string   		`json:"token"`
+			Username  		string   		`json:"username"`
+			FcmToken		[]string		`json:"fcmToken"`
+			ProfilePicture	string			`json:"profilePicture"`
 		}{
-			ID:        _id,
-			FirstName: 	user.FirstName,
-			LastName:  	user.LastName,
-			Email:     	user.Email,
-			PhoneNo:   	user.PhoneNo,
-			Bio:       	user.Bio,
-			Gender:    	user.Gender,
-			Age:       	user.Age,
-			Interests: 	user.Interests,
-			Token:     	token,
-			Username:  	user.Username,
-			FcmToken:	user.FcmToken,
+			ID:        			_id,
+			FirstName: 			user.FirstName,
+			LastName:  			user.LastName,
+			Email:     			user.Email,
+			PhoneNo:   			user.PhoneNo,
+			Bio:       			user.Bio,
+			Gender:    			user.Gender,
+			Age:       			user.Age,
+			Interests: 			user.Interests,
+			Token:     			token,
+			Username:  			user.Username,
+			FcmToken:			user.FcmToken,
+			ProfilePicture: 	user.ProfilePicture,
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -176,27 +178,29 @@ func Login(client *mongo.Client) http.Handler {
 		user, err = query.UpdateUser(user, client)
 
 		payload := struct {
-			ID        primitive.ObjectID   `json:"_id,omitempty" bson:"_id,omitempty"`
-			FirstName string   `json:"firstName"`
-			LastName  string   `json:"lastName"`
-			Email     string   `json:"email"`
-			PhoneNo   string   `json:"phoneNo"`
-			Bio       string   `json:"bio"`
-			Gender    int64   `json:"gender"`
-			Age		  int64   `json:"age"`
-			Interests []string `json:"interests"`
-			Token     string   `json:"token"`
+			ID        		primitive.ObjectID   	`json:"_id,omitempty" bson:"_id,omitempty"`
+			FirstName 		string   				`json:"firstName"`
+			LastName  		string   				`json:"lastName"`
+			Email     		string   				`json:"email"`
+			PhoneNo   		string   				`json:"phoneNo"`
+			Bio       		string   				`json:"bio"`
+			Gender    		int64   				`json:"gender"`
+			Age		  		int64  					`json:"age"`
+			Interests 		[]string 				`json:"interests"`
+			Token     		string   				`json:"token"`
+			ProfilePicture	string					`json:"profilePicture"`
 		}{
-			ID:        user.ID,
-			FirstName: user.FirstName,
-			LastName:  user.LastName,
-			Email:     user.Email,
-			PhoneNo:   user.PhoneNo,
-			Bio:       user.Bio,
-			Gender:    user.Gender,
-			Age:       user.Age,
-			Interests: user.Interests,
-			Token:     token,
+			ID:        		user.ID,
+			FirstName: 		user.FirstName,
+			LastName:  		user.LastName,
+			Email:     		user.Email,
+			PhoneNo:   		user.PhoneNo,
+			Bio:       		user.Bio,
+			Gender:    		user.Gender,
+			Age:       		user.Age,
+			Interests: 		user.Interests,
+			Token:     		token,
+			ProfilePicture: user.ProfilePicture,
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -286,21 +290,23 @@ func GoogleOauth(client *mongo.Client, ec *elastic.Client) http.Handler {
 			}
 
 			payload := struct {
-				ID         primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-				FirstName  string             `json:"firstName"`
-				LastName   string             `json:"lastName"`
-				Email      string             `json:"email"`
-				Token      string             `json:"token"`
-				IsComplete bool               `json:"isComplete"`
-				FcmToken   []string			  `json:"fcmToken"`
+				ID         			primitive.ObjectID 		`json:"_id,omitempty" bson:"_id,omitempty"`
+				FirstName  			string             		`json:"firstName"`
+				LastName   			string             		`json:"lastName"`
+				Email      			string             		`json:"email"`
+				Token      			string             		`json:"token"`
+				IsComplete 			bool               		`json:"isComplete"`
+				FcmToken   			[]string				`json:"fcmToken"`
+				ProfilePicture		string					`json:"profilePicture"`
 			}{
-				ID:         _id,
-				FirstName:  user.FirstName,
-				LastName:   user.LastName,
-				Email:      user.Email,
-				Token:      jwtToken,
-				IsComplete: user.IsComplete,
-				FcmToken:   user.FcmToken,
+				ID:         	_id,
+				FirstName:  	user.FirstName,
+				LastName:   	user.LastName,
+				Email:      	user.Email,
+				Token:      	jwtToken,
+				IsComplete: 	user.IsComplete,
+				FcmToken:   	user.FcmToken,
+				ProfilePicture: user.ProfilePicture,
 			}
 
 			w.Header().Set("Content-Type", "application/json")
@@ -315,6 +321,7 @@ func GoogleOauth(client *mongo.Client, ec *elastic.Client) http.Handler {
 			newUser.LastName = tokenInfo.FamilyName
 			newUser.IsComplete = false
 			newUser.FcmToken = append(newUser.FcmToken, data.FcmToken)
+			newUser.ProfilePicture =""
 			_id, err := query.AddUser(&newUser, client, ec)
 
 			if err != nil {
@@ -330,21 +337,23 @@ func GoogleOauth(client *mongo.Client, ec *elastic.Client) http.Handler {
 			}
 
 			payload := struct {
-				ID         string		`json:"_id,omitempty" bson:"_id,omitempty"`
-				FirstName  string		`json:"firstName"`
-				LastName   string		`json:"lastName"`
-				Email      string		`json:"email"`
-				Token      string		`json:"token"`
-				IsComplete bool			`json:"isComplete"`
-				FcmToken   []string		`json:"fcmToken"`
+				ID         			string		`json:"_id,omitempty" bson:"_id,omitempty"`
+				FirstName  			string		`json:"firstName"`
+				LastName   			string		`json:"lastName"`
+				Email      			string		`json:"email"`
+				Token      			string		`json:"token"`
+				IsComplete 			bool		`json:"isComplete"`
+				FcmToken   			[]string	`json:"fcmToken"`
+				ProfilePicture		string		`json:"profilePicture"`
 			}{
-				ID:         _id,
-				FirstName:  newUser.FirstName,
-				LastName:   newUser.LastName,
-				Email:      newUser.Email,
-				Token:      jwtToken,
-				IsComplete: newUser.IsComplete,
-				FcmToken:   user.FcmToken,
+				ID:         	_id,
+				FirstName:  	newUser.FirstName,
+				LastName:   	newUser.LastName,
+				Email:      	newUser.Email,
+				Token:      	jwtToken,
+				IsComplete: 	newUser.IsComplete,
+				FcmToken:   	newUser.FcmToken,
+				ProfilePicture: newUser.ProfilePicture,
 			}
 
 			w.Header().Set("Content-Type", "application/json")

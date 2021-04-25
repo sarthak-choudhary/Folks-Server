@@ -50,6 +50,8 @@ func main() {
 	http.Handle("/google_login", middleware.LogReq(api.GoogleOauth(client, elastiClient)))
 	http.Handle("/search", middleware.LogReq(middleware.Auth(client, api.GetData(elastiClient))))
 	http.Handle("/my_profile", middleware.LogReq(middleware.Auth(client, api.Myprofile())))
+	http.Handle("/add_event_image", middleware.LogReq(middleware.Auth(client, api.EventImageHandler(client))))
+	http.Handle("/change_profile_picture", middleware.LogReq(middleware.Auth(client, api.ChangeProfilePicture(client))))
 	http.HandleFunc("/image_upload", util.Handler)
 
 	log.Printf("HTTP server started on :%s", os.Getenv("PORT_FOR_WEBAPP"))

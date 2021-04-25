@@ -120,6 +120,9 @@ var UserType = graphql.NewObject(graphql.ObjectConfig{
 		"fcmToken":	&graphql.Field{
 			Type: graphql.NewList(graphql.String),
 		},
+		"profilePicture": &graphql.Field{
+			Type: graphql.String,
+		},
 	},
 })
 

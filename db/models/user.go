@@ -9,28 +9,29 @@ import (
 
 // User represents the User entity stored in the database
 type User struct {
-	ID               primitive.ObjectID   `json:"_id,omitempty" bson:"_id,omitempty"`
-	FirstName        string               `json:"firstName" bson:"firstName"`
-	LastName         string               `json:"lastName" bson:"lastName"`
-	Email            string               `json:"email" bson:"email"` //Unique
-	Username		 string 			  `json:"username,omitempty" bson:"username,omitempty"` //Unique
-	Password         string               `json:"password,omitempty" bson:"password,omitempty"`
-	PhoneNo          string               `json:"phoneNo,omitempty" bson:"phoneNo,omitempty"` //Unique
-	Bio              string               `json:"bio,omitempty" bson:"bio,omitempty"`
-	Age              int64				  `json:"age,omitempty" bson:"age,omitempty"`
-	Gender			 int64				  `json:"gender,omitempty" bson:"gender,omitempty"`
-	Interests        []string             `json:"interests,omitempty" bson:"interests,omitempty"`
-	IsComplete       bool                 `json:"isComplete,omitempty" bson:"isComplete,omitempty"`
-	IsPublic         bool                 `json:"isPublic,omitempty" bson:"isPublic,omitempty"`
-	FollowedByCount  int64                `json:"followedByCount,omitempty" bson:"followedByCount,omitempty"`
-	Following        []primitive.ObjectID `json:"following,omitempty" bson:"following,omitempty"`
-	Events           []primitive.ObjectID `json:"events,omitempty" bson:"events,omitempty"`
-	RequestsSent     []primitive.ObjectID `json:"requestsSent,omitempty" bson:"requestsSent,omitempty"`
-	RequestsReceived []primitive.ObjectID `json:"requestsReceived,omitempty" bson:"requestsReceived,omitempty"`
-	InvitesSent      []primitive.ObjectID `json:"invitesSent,omitempty" bson:"invitesSent,omitempty"`
-	InvitesReceived  []primitive.ObjectID `json:"invitesReceived,omitempty" bson:"invitesReceived,omitempty"`
-	PicturesUrls     []string             `bson:"picturesUrls,omitempty" json:"picturesUrls,omitempty"`
-	FcmToken		 []string			  `bson:"fcmToken,omitempty" json:"fcmToken,omitempty"`
+	ID               	primitive.ObjectID   	`json:"_id,omitempty" bson:"_id,omitempty"`
+	FirstName        	string               	`json:"firstName" bson:"firstName"`
+	LastName         	string               	`json:"lastName" bson:"lastName"`
+	Email            	string               	`json:"email" bson:"email"` //Unique
+	Username		 	string 			  		`json:"username,omitempty" bson:"username,omitempty"` //Unique
+	Password         	string               	`json:"password,omitempty" bson:"password,omitempty"`
+	PhoneNo          	string               	`json:"phoneNo,omitempty" bson:"phoneNo,omitempty"` //Unique
+	Bio              	string               	`json:"bio,omitempty" bson:"bio,omitempty"`
+	Age              	int64				  	`json:"age,omitempty" bson:"age,omitempty"`
+	Gender			 	int64				 	`json:"gender,omitempty" bson:"gender,omitempty"`
+	Interests        	[]string             	`json:"interests,omitempty" bson:"interests,omitempty"`
+	IsComplete       	bool                 	`json:"isComplete,omitempty" bson:"isComplete,omitempty"`
+	IsPublic         	bool                 	`json:"isPublic,omitempty" bson:"isPublic,omitempty"`
+	FollowedByCount  	int64                	`json:"followedByCount,omitempty" bson:"followedByCount,omitempty"`
+	Following        	[]primitive.ObjectID 	`json:"following,omitempty" bson:"following,omitempty"`
+	Events           	[]primitive.ObjectID 	`json:"events,omitempty" bson:"events,omitempty"`
+	RequestsSent     	[]primitive.ObjectID 	`json:"requestsSent,omitempty" bson:"requestsSent,omitempty"`
+	RequestsReceived 	[]primitive.ObjectID 	`json:"requestsReceived,omitempty" bson:"requestsReceived,omitempty"`
+	InvitesSent      	[]primitive.ObjectID 	`json:"invitesSent,omitempty" bson:"invitesSent,omitempty"`
+	InvitesReceived  	[]primitive.ObjectID 	`json:"invitesReceived,omitempty" bson:"invitesReceived,omitempty"`
+	PicturesUrls     	[]string             	`bson:"picturesUrls,omitempty" json:"picturesUrls,omitempty"`
+	FcmToken		 	[]string			  	`bson:"fcmToken,omitempty" json:"fcmToken,omitempty"`
+	ProfilePicture		string					`bson:"profilePicture,omitempty" json:"profilePicture,omitempty"`
 }
 
 //Users - Slice of Users

@@ -17,7 +17,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-func uploadFileToS3(s *session.Session, file multipart.File, fileHeader *multipart.FileHeader) (string, error) {
+func UploadFileToS3(s *session.Session, file multipart.File, fileHeader *multipart.FileHeader) (string, error) {
 	size := fileHeader.Size
 	buffer := make([]byte, size)
 	file.Read(buffer)
@@ -91,7 +91,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fileName, err := uploadFileToS3(s, file, fileHeader)
+	fileName, err := UploadFileToS3(s, file, fileHeader)
 	if err != nil {
 		//Could not upload file to S3
 		w.WriteHeader(http.StatusInternalServerError)
