@@ -14,6 +14,8 @@ func FollowAcceptedNotification(client *mongo.Client, receiverId primitive.Objec
 	notif.Code = 4
 	notif.Sender = senderId
 	notif.Receiver = append(notif.Receiver, receiverId)
+	loc, _ := time.LoadLocation("Asia/Kolkata")
+	notif.NotificationTime = time.Now().In(loc)
 	err, newNotif := SendNotification(notif, client)
 	if err != nil	{
 		return err, models.Notification{}

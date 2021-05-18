@@ -2,14 +2,16 @@ package models
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 type Notification struct {
-	ID				primitive.ObjectID			`json:"_id, omitempty" bson:"_id, omitempty"`
-	Code			int64						`json:"code" bson:"code"`
-	Sender			primitive.ObjectID			`json:"sender" bson:"sender"`
-	Receiver		[]primitive.ObjectID		`json:"receiver" bson:"receiver"`
-	Event			primitive.ObjectID			`json:"event,omitempty" bson:"event,omitempty"`
+	ID					primitive.ObjectID			`json:"_id, omitempty" bson:"_id, omitempty"`
+	Code				int64						`json:"code" bson:"code"`
+	Sender				primitive.ObjectID			`json:"sender" bson:"sender"`
+	Receiver			[]primitive.ObjectID		`json:"receiver" bson:"receiver"`
+	Event				primitive.ObjectID			`json:"event,omitempty" bson:"event,omitempty"`
+	NotificationTime	time.Time					`json:"notificationTime,required" bson:"notificationTime,required"`
 }
 
 type Notifications []Notification

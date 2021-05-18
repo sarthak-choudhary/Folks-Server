@@ -16,6 +16,8 @@ func EventJoinNotification(client *mongo.Client, senderId primitive.ObjectID, re
 	notif.Sender	=	senderId
 	notif.Event		=	event.ID
 	notif.Code		=	2
+	loc, _ := time.LoadLocation("Asia/Kolkata")
+	notif.NotificationTime = time.Now().In(loc)
 
 	err, newNotif := SendNotification(notif, client)
 	if err != nil {

@@ -105,6 +105,11 @@ func InitSchema(d *db.MongoDB, ec *elastic.Client) graphql.Schema {
 					Args: graphql.FieldConfigArgument{},
 					Resolve: getUpcommingEvents,
 				},
+				"myNotifications": &graphql.Field{
+					Type: graphql.NewList(NotificationType),
+					Args: graphql.FieldConfigArgument{},
+					Resolve: myNotifications,
+				},
 			},
 		}),
 		Mutation: graphql.NewObject(graphql.ObjectConfig{

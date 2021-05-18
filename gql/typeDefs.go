@@ -123,6 +123,9 @@ var UserType = graphql.NewObject(graphql.ObjectConfig{
 		"profilePicture": &graphql.Field{
 			Type: graphql.String,
 		},
+		"followedBy": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
 	},
 })
 
@@ -205,3 +208,31 @@ var SquadType = graphql.NewObject(graphql.ObjectConfig{
 		},
 	},
 })
+
+// Notification Scalar
+var NotificationType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "notification",
+	Fields: graphql.Fields{
+		"_id": &graphql.Field{
+			Type: ID,
+		},
+		"code": &graphql.Field{
+			Type: graphql.Int,
+		},
+		"sender": &graphql.Field{
+			Type: ID,
+		},
+		"receiver": &graphql.Field{
+			Type: graphql.NewList(ID),
+		},
+		"event": &graphql.Field{
+			Type: ID,
+		},
+		"notificationTime": &graphql.Field{
+			Type: graphql.DateTime,
+		},
+	},
+})
+
+
+// Chatroom scalar

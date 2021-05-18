@@ -803,3 +803,13 @@ func updateUser(rp graphql.ResolveParams) (interface{}, error)	{
 	}
 	return result, nil
 }
+
+
+func myNotifications(rp graphql.ResolveParams) (interface{}, error)	{
+	user := rp.Context.Value("user").(*models.User)
+	err, notifs := query.MyNotifications(mongo.Session, *user)
+	if err != nil {
+		return nil, err
+	}
+	return notifs, nil
+}

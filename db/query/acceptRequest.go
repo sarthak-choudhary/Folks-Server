@@ -19,7 +19,7 @@ func AcceptRequest(acceptorId primitive.ObjectID, requesterId primitive.ObjectID
 	emptyUserObject := models.User{}
 
 	q := bson.M{"_id": acceptorId}
-	q2 := bson.M{"$pull": bson.M{"requestsReceived": requesterId}, "$inc": bson.M{"followedByCount": 1}}
+	q2 := bson.M{"$pull": bson.M{"requestsReceived": requesterId}, "$inc": bson.M{"followedByCount": 1}, "$push": bson.M{"followedBy": requesterId}}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()

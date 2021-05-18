@@ -24,6 +24,7 @@ type User struct {
 	IsPublic         	bool                 	`json:"isPublic,omitempty" bson:"isPublic,omitempty"`
 	FollowedByCount  	int64                	`json:"followedByCount,omitempty" bson:"followedByCount,omitempty"`
 	Following        	[]primitive.ObjectID 	`json:"following,omitempty" bson:"following,omitempty"`
+	FollowedBy			[]primitive.ObjectID	`json:"followedBy,omitempty" bson:"followedBy,omitempty"`
 	Events           	[]primitive.ObjectID 	`json:"events,omitempty" bson:"events,omitempty"`
 	RequestsSent     	[]primitive.ObjectID 	`json:"requestsSent,omitempty" bson:"requestsSent,omitempty"`
 	RequestsReceived 	[]primitive.ObjectID 	`json:"requestsReceived,omitempty" bson:"requestsReceived,omitempty"`
